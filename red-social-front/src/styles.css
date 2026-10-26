@@ -1,2 +1,106 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+
+/* ---------- Paleta y medidas de Resuelvo ---------- */
+:root {
+    --rs-fondo: #252523;
+    --rs-superficie: #2f2f2c;
+    --rs-superficie-alta: #393936;
+    --rs-borde: #4a4a46;
+    --rs-texto: #ecebe6;
+    --rs-texto-suave: #a9a79f;
+    --rs-accion: #f97316;
+    --rs-accion-clara: #fb923c;
+    --rs-accion-oscura: #ea580c;
+    --rs-radio: 0.5rem;
+
+    /* Le decimos a Bootstrap que use nuestra paleta */
+    --bs-body-bg: var(--rs-fondo);
+    --bs-body-color: var(--rs-texto);
+    --bs-body-font-family: "Barlow", system-ui, sans-serif;
+    --bs-heading-color: var(--rs-texto);
+    --bs-emphasis-color: #ffffff;
+    --bs-secondary-color: var(--rs-texto-suave);
+    --bs-secondary-bg: var(--rs-superficie-alta);
+    --bs-tertiary-bg: var(--rs-superficie);
+    --bs-border-color: var(--rs-borde);
+}
+
+/* ---------- Texto ---------- */
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+a {
+    color: var(--rs-accion);
+}
+
+a:hover {
+    color: var(--rs-accion-clara);
+}
+
+/* ---------- Botones ---------- */
+.btn {
+    --bs-btn-border-radius: var(--rs-radio);
+    font-weight: 600;
+}
+
+/* Botón principal: la acción más importante de cada pantalla */
+.btn-accion {
+    --bs-btn-color: #1a1208;
+    --bs-btn-bg: var(--rs-accion);
+    --bs-btn-border-color: var(--rs-accion);
+    --bs-btn-hover-color: #1a1208;
+    --bs-btn-hover-bg: var(--rs-accion-clara);
+    --bs-btn-hover-border-color: var(--rs-accion-clara);
+    --bs-btn-active-color: #1a1208;
+    --bs-btn-active-bg: var(--rs-accion-oscura);
+    --bs-btn-active-border-color: var(--rs-accion-oscura);
+    --bs-btn-disabled-color: #1a1208;
+    --bs-btn-disabled-bg: var(--rs-accion);
+    --bs-btn-disabled-border-color: var(--rs-accion);
+    --bs-btn-focus-shadow-rgb: 249, 115, 22;
+}
+
+/* Botón secundario: cancelar, volver, acciones de menor peso */
+.btn-secundario {
+    --bs-btn-color: var(--rs-texto);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--rs-borde);
+    --bs-btn-hover-color: var(--rs-texto);
+    --bs-btn-hover-bg: var(--rs-superficie-alta);
+    --bs-btn-hover-border-color: var(--rs-texto-suave);
+    --bs-btn-active-color: var(--rs-texto);
+    --bs-btn-active-bg: var(--rs-superficie-alta);
+    --bs-btn-active-border-color: var(--rs-texto-suave);
+    --bs-btn-focus-shadow-rgb: 169, 167, 159;
+}
+
+/* ---------- Formularios ---------- */
+.form-label {
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--rs-superficie-alta);
+    border-color: var(--rs-borde);
+    border-radius: var(--rs-radio);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--rs-superficie-alta);
+    border-color: var(--rs-accion);
+    box-shadow: 0 0 0 0.25rem rgba(249, 115, 22, 0.25);
+}
+
+/* ---------- Tarjetas ---------- */
+.card {
+    --bs-card-bg: var(--rs-superficie);
+    --bs-card-border-color: var(--rs-borde);
+    --bs-card-border-radius: var(--rs-radio);
+    --bs-card-inner-border-radius: calc(var(--rs-radio) - 1px);
+}
