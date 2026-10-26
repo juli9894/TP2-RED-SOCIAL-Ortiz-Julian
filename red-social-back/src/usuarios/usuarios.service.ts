@@ -33,4 +33,12 @@ export class UsuariosService {
         contrasena: contrasenaHasheada,
         });
     }
+
+    async buscarPorUsuarioOCorreo(valor: string) {
+        return this.usuarioModel.findOne({
+        $or: [{ usuario: valor }, { correo: valor.toLowerCase() }],
+        });
+    }
+
+    
 }
