@@ -1,0 +1,17 @@
+.layout {
+    display: flex;
+    min-height: calc(100vh - 3.5rem);
+}
+
+.contenido {
+    flex: 1;
+    min-width: 0;
+    padding: 1.5rem;
+}
+
+/* En celular dejamos lugar abajo para que el menú no tape el contenido */
+@media (max-width: 767.98px) {
+    .contenido {
+        padding: 1rem 1rem 5rem;
+    }
+}

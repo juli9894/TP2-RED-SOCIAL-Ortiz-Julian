@@ -1,0 +1,59 @@
+.lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 15rem;
+    flex-shrink: 0;
+    padding: 1rem 0.75rem;
+    border-right: 1px solid var(--rs-borde);
+}
+
+.lateral-enlace {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--rs-radio);
+    color: var(--rs-texto);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.lateral-enlace i {
+    font-size: 1.25rem;
+}
+
+.lateral-enlace:hover {
+    background-color: var(--rs-superficie-alta);
+    color: var(--rs-texto);
+}
+
+.lateral-enlace.activo {
+    background-color: var(--rs-superficie-alta);
+    color: var(--rs-accion);
+}
+
+/* En pantallas angostas (celular), el menú pasa abajo */
+@media (max-width: 767.98px) {
+    .lateral {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        padding: 0.5rem;
+        background-color: var(--rs-superficie);
+        border-top: 1px solid var(--rs-borde);
+        border-right: none;
+    }
+
+    .lateral-enlace {
+        flex-direction: column;
+        gap: 0.125rem;
+        padding: 0.25rem 1rem;
+        font-size: 0.75rem;
+    }
+}
