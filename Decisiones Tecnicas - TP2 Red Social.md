@@ -152,6 +152,15 @@ El registro lleva un archivo, así que el front envía el formulario como `multi
 ### 5.2 Dónde se guarda el archivo ⏳
 No se puede guardar en una carpeta del servidor: en Vercel el back corre de forma temporal y esos archivos desaparecen. Se usará un servicio de almacenamiento externo (opciones: Cloudinary o Vercel Blob) y en la base se guarda solo la URL, como pide la consigna. Se decide al llegar a esa parte del sprint 1.
 
+### 5.3 La imagen de perfil es opcional, con avatar por defecto en el front ✅
+La imagen no es obligatoria en el registro, pero debe poder cargarse si la persona quiere (confirmado por el profesor).
+
+- **En la base de datos:** si la persona no sube foto, `imagenPerfil` queda sin valor. No se guarda ninguna URL de "imagen por defecto".
+- **En el front:** si el usuario no tiene `imagenPerfil`, se muestra un ícono de persona vacía (`bi-person-circle`, de Bootstrap Icons).
+- **Por qué:** si más adelante se cambia el avatar por defecto, no hay que tocar datos ya guardados. Además es el comportamiento habitual en una red social.
+- **Orden de trabajo:** es lo último que se implementa del sprint 1. Si el tiempo aprieta, el registro funciona igual sin imagen.
+- **Defensa:** *"La imagen es opcional. Si no hay, la base no guarda nada y el front muestra un avatar genérico."*
+
 ---
 
 ## 6. Deploy y entorno
@@ -170,8 +179,11 @@ La cadena de conexión a Mongo, el secreto del JWT y las credenciales del servic
 
 - **Defensa:** *"Los secretos no viven en el código: así no quedan expuestos en GitHub."*
 
-### 6.4 Git y GitHub 🟡
-Un repositorio por proyecto, con commits chicos y un commit o tag de cierre por sprint. Así se puede mostrar el estado exacto de cada entrega.
+### 6.4 Git y GitHub ✅
+Un **único repositorio** en la raíz (`TP2-RED-SOCIAL-Ortiz-Julian`) con dos carpetas: `red-social-back` y `red-social-front`. Esta decisión reemplaza la idea inicial de un repositorio por proyecto. Se hacen commits chicos, uno por paso, y un commit de cierre por sprint. Así se puede mostrar el estado exacto de cada entrega.
+
+- **Vercel:** cada proyecto se despliega eligiendo su carpeta como *Root Directory* (`red-social-back` o `red-social-front`).
+- **Defensa:** *"Un solo repositorio facilita la corrección: el profesor ve ambos proyectos y todo el historial en un único lugar."*
 
 ---
 
@@ -183,6 +195,9 @@ Se simula un cliente que pide cosas nuevas cada semana, así que no se adelanta 
 ### 7.2 Sin tests automatizados ✅
 La consigna no los pide. Si el profesor los exige, la cátedra usa Vitest (no Jest).
 
+
+### 7.3 Editar el perfil: fuera del sprint 1 ⏳
+La consigna general dice que el usuario puede editar su perfil, pero ningún sprint lo pide. Hipótesis (no confirmada): como mínimo cambiar la foto y la descripción. No se implementa hasta que un sprint lo pida; si no aparece, queda como mejora antes del final.
 ---
 
 ## 8. Decisiones que se toman más adelante ⏳
@@ -199,8 +214,7 @@ Se anotan para no olvidarlas, pero no se deciden hasta llegar a cada sprint.
 
 ## 9. Preguntas abiertas para el profesor
 
-1. La consigna general dice que el usuario puede **editar** su perfil, pero ningún sprint lo detalla. ¿Se pide en alguno?
-2. ¿La imagen de perfil del registro es obligatoria u opcional?
+1. La consigna general dice que el usuario puede **editar** su perfil, pero ningún sprint lo detalla. ¿Se pide en alguno? *(Pendiente de confirmar; hipótesis: al menos cambiar foto y descripción. Ver 7.3.)*
+2. ~~¿La imagen de perfil del registro es obligatoria u opcional?~~ **Resuelta:** es opcional, con avatar por defecto (ver 5.3).
 3. ¿Hay un límite de caracteres para la "descripción breve"?
 4. En el sprint 2 el back pide crear publicaciones, pero el front no lista una pantalla para hacerlo. ¿Alcanza con un formulario simple?
-5. El profesor mencionó que desde la tarjeta se puede "ir a verlo a la página de *trash* o demás". ¿Qué es esa página: el detalle de la publicación, una papelera de publicaciones eliminadas u otra cosa?
