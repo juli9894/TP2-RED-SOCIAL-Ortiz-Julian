@@ -1,7 +1,11 @@
-<app-navbar />
-<div class="layout">
-    <app-sidebar />
-    <div class="contenido">
-        <router-outlet />
+@if (esAcceso()) {
+    <router-outlet />
+} @else {
+    <app-navbar />
+    <div class="layout">
+        <app-sidebar />
+        <div class="contenido">
+            <router-outlet />
+        </div>
     </div>
-</div>
+}

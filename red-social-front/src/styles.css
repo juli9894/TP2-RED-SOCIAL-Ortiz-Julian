@@ -133,3 +133,54 @@ a:hover {
 .estado-vacio p {
     margin: 0;
 }
+
+/* ---------- Pantallas de acceso (login y registro) ---------- */
+.acceso {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    min-height: 100vh;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding: 2rem 4vw;
+}
+
+.acceso-logo {
+    height: clamp(8rem, 22vw, 16rem);
+    width: auto;
+    filter: drop-shadow(0 0 2rem rgba(249, 115, 22, 0.25));
+}
+
+.acceso-nombre {
+    margin: 1rem 0 0.5rem;
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    line-height: 1;
+    color: var(--rs-accion);
+}
+
+.acceso-lema {
+    max-width: 24rem;
+    font-size: 1.4rem;
+    color: var(--rs-texto-suave);
+}
+
+.acceso-formulario .card {
+    max-width: 28rem;
+    margin: 0 auto;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35);
+}
+
+/* En celular: una sola columna y la marca centrada */
+@media (max-width: 767.98px) {
+    .acceso {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .acceso-lema {
+        margin: 0 auto;
+        font-size: 1.15rem;
+    }
+}

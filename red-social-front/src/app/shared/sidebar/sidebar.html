@@ -3,8 +3,10 @@
         <i class="bi bi-chat-square-text"></i>
         <span>Publicaciones</span>
     </a>
-    <a class="lateral-enlace" routerLink="/mi-perfil" routerLinkActive="activo">
-        <i class="bi bi-person-circle"></i>
-        <span>Mi perfil</span>
-    </a>
+    @if (auth.usuarioActual()) {
+        <a class="lateral-enlace" routerLink="/mi-perfil" routerLinkActive="activo">
+            <i class="bi bi-person-circle"></i>
+            <span>Mi perfil</span>
+        </a>
+    }
 </nav>

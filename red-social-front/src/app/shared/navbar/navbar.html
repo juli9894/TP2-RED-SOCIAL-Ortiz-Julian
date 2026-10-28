@@ -6,8 +6,20 @@
         </a>
 
         <nav class="acciones">
-            <a class="btn btn-secundario btn-sm" routerLink="/login">Ingresar</a>
-            <a class="btn btn-accion btn-sm" routerLink="/registro">Registrarme</a>
+            @if (auth.usuarioActual(); as usuario) {
+                @if (usuario.imagenPerfil) {
+                    <img class="avatar" [src]="usuario.imagenPerfil" alt="" />
+                } @else {
+                    <i class="bi bi-person-circle avatar-icono"></i>
+                }
+                <span class="nombre-usuario">{{ usuario.nombre }}</span>
+                <button type="button" class="btn btn-secundario btn-sm" (click)="salir()">
+                    Salir
+                </button>
+            } @else {
+                <a class="btn btn-secundario btn-sm" routerLink="/login">Ingresar</a>
+                <a class="btn btn-accion btn-sm" routerLink="/registro">Registrarme</a>
+            }
         </nav>
     </div>
 </header>

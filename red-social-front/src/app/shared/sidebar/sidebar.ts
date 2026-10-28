@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Auth } from '../../core/auth';
 
 @Component({
     selector: 'app-sidebar',
@@ -7,4 +8,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     templateUrl: './sidebar.html',
     styleUrl: './sidebar.css',
 })
-export class Sidebar {}
+export class Sidebar {
+    protected auth = inject(Auth);
+}

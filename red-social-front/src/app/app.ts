@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs';
 import { Navbar } from './shared/navbar/navbar';
 import { Sidebar } from './shared/sidebar/sidebar';
 
@@ -10,5 +11,17 @@ import { Sidebar } from './shared/sidebar/sidebar';
     templateUrl: './app.html',
 })
 export class App {
-    protected readonly title = signal('red-social-front');
+    private router = inject(Router);
+
+    // true cuando estamos en login o registro
+    protected esAcceso = signal(false);
+
+    constructor() {
+        this.router.events
+            .pipe(filter((evento) => evento instanceof NavigationEnd))
+            .subscribe((evento) => {
+                const url = evento.urlAfterRedirects;
+                this.esAcceso.set(url.startsWith('/login') || url.startsWith('/registro'));
+            });
+    }
 }
