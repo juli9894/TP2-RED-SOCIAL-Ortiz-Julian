@@ -30,17 +30,13 @@
                     [class.is-invalid]="invalido('contrasena')"
                 />
                 @if (invalido('contrasena')) {
-                    <div class="invalid-feedback">
-                        @if (formulario.controls.contrasena.hasError('required')) {
-                            Ingresá tu contraseña.
-                        } @else {
-                            La contraseña tiene al menos 8 caracteres, una mayúscula y un número.
-                        }
-                    </div>
+                    <div class="invalid-feedback">Ingresá tu contraseña.</div>
                 }
             </div>
-
-            <button type="submit" class="btn btn-accion w-100">Ingresar</button>
+            @if (error()) {
+                <div class="alert alert-danger" role="alert">{{ error() }}</div>
+            }
+            <button type="submit" class="btn btn-accion w-100" [disabled]="cargando()">Ingresar</button>
         </div>
     </form>
 

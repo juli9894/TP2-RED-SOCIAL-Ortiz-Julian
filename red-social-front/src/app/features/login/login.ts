@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { signal } from '@angular/core';
+import { Auth } from '../../core/auth';
 
 @Component({
     selector: 'app-login',
@@ -10,10 +13,15 @@ import { RouterLink } from '@angular/router';
 })
 export class Login {
     private fb = inject(FormBuilder);
+    private router = inject(Router);
+    private auth = inject(Auth);
+
+    protected error = signal('');
+    protected cargando = signal(false);
 
     protected formulario = this.fb.nonNullable.group({
         usuarioOCorreo: ['', [Validators.required]],
-        contrasena: ['',[Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d).{8,}$/)],
+        contrasena: ['',[Validators.required],
         ],
     });
 
@@ -27,6 +35,24 @@ export class Login {
             this.formulario.markAllAsTouched();
             return;
         }
-        console.log(this.formulario.getRawValue());
+
+        this.error.set('');
+        this.cargando.set(true);
+
+        this.auth.login(this.formulario.getRawValue()).subscribe({ 
+            //subscribe al observable que devuelve el método login de Auth
+            next: (respuesta) => {
+                console.log(respuesta);
+                this.router.navigate(['/publicaciones']);
+            },
+            error: (err) => {
+                this.cargando.set(false);
+                this.error.set(
+                    err.status === 0
+                        ? 'No se pudo conectar con el servidor.'
+                        : (err.error?.message ?? 'Ocurrió un error. Probá de nuevo.'),
+                );
+            },
+        });
     }
 }
