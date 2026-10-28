@@ -11,7 +11,7 @@ export class UsuariosService {
         @InjectModel(Usuario.name) private usuarioModel: Model<Usuario>,
     ) {}
 
-    async crear(datos: CrearUsuarioDto) {
+    async crear(datos: CrearUsuarioDto & { imagenPerfil?: string }) {
         const correoExistente = await this.usuarioModel.findOne({
         correo: datos.correo.toLowerCase(),
         });
