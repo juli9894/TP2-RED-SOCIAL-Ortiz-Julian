@@ -1,13 +1,39 @@
 .barra {
+    height: 3.5rem;
     background-color: var(--rs-superficie);
     border-bottom: 1px solid var(--rs-borde);
-    --bs-navbar-color: var(--rs-texto-suave);
-    --bs-navbar-hover-color: var(--rs-texto);
-    --bs-navbar-active-color: var(--rs-accion);
-    --bs-navbar-brand-color: var(--rs-texto);
-    --bs-navbar-brand-hover-color: var(--rs-accion);
 }
 
-.navbar-brand i {
-    color: var(--rs-accion);
+.barra-contenido {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1rem;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--rs-texto);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.marca:hover {
+    color: var(--rs-accion-clara);
+}
+
+.marca-logo {
+    height: 3rem;
+    width: auto;
+}
+
+.acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
