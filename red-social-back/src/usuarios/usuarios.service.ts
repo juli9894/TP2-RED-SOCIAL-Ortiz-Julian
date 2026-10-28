@@ -20,10 +20,10 @@ export class UsuariosService {
         }
 
         const usuarioExistente = await this.usuarioModel.findOne({
-        usuario: datos.usuario,
+            usuario: datos.usuario.trim().toLowerCase(),
         });
         if (usuarioExistente) {
-        throw new ConflictException('El nombre de usuario ya está en uso');
+            throw new ConflictException('El nombre de usuario ya está en uso');
         }
 
         const contrasenaHasheada = await bcrypt.hash(datos.contrasena, 10);
@@ -35,10 +35,11 @@ export class UsuariosService {
     }
 
     async buscarPorUsuarioOCorreo(valor: string) {
+        const normalizado = valor.trim().toLowerCase();
+
         return this.usuarioModel.findOne({
-        $or: [{ usuario: valor }, { correo: valor.toLowerCase() }],
+            $or: [{ usuario: normalizado }, { correo: normalizado }],
         });
     }
-
     
 }

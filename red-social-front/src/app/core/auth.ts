@@ -14,11 +14,25 @@ export interface RespuestaLogin {
     };
 }
 
+export interface DatosRegistro {
+    nombre: string;
+    apellido: string;
+    correo: string;
+    usuario: string;
+    contrasena: string;
+    fechaNacimiento: string;
+    descripcion: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class Auth {
     private http = inject(HttpClient);
 
     login(datos: { usuarioOCorreo: string; contrasena: string }) {
         return this.http.post<RespuestaLogin>(`${API_URL}/auth/login`, datos); //observable<RespuestaLogin>
+    }
+
+    registro(datos: DatosRegistro) {
+        return this.http.post(`${API_URL}/auth/registro`, datos);
     }
 }
