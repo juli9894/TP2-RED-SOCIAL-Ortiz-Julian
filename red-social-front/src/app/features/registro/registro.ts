@@ -20,8 +20,13 @@ export class Registro {
     private auth = inject(Auth);
     private router = inject(Router);
 
+
     protected error = signal('');
     protected cargando = signal(false);
+    protected errorArchivo = signal('');
+    protected vistaPrevia = signal<string | null>(null);
+    private archivo: File | null = null;
+
 
     protected formulario = this.fb.nonNullable.group(
         {
@@ -40,10 +45,12 @@ export class Registro {
         { validators: contrasenasIguales },
     );
 
+
     protected invalido(campo: string) {
         const control = this.formulario.get(campo);
         return !!control && control.invalid && control.touched;
     }
+
 
     protected noCoinciden() {
         return (
@@ -52,8 +59,38 @@ export class Registro {
         );
     }
 
+
+    protected seleccionarArchivo(evento: Event) {
+        const input = evento.target as HTMLInputElement;
+        const archivo = input.files?.[0] ?? null;
+
+        this.archivo = null;
+        this.errorArchivo.set('');
+        this.vistaPrevia.set(null);
+
+        if (!archivo) {
+            return;
+        }
+
+        if (!archivo.type.startsWith('image/')) {
+            this.errorArchivo.set('El archivo debe ser una imagen.');
+            input.value = '';
+            return;
+        }
+
+        if (archivo.size > 2 * 1024 * 1024) {
+            this.errorArchivo.set('La imagen no puede pesar más de 2 MB.');
+            input.value = '';
+            return;
+        }
+
+        this.archivo = archivo;
+        this.vistaPrevia.set(URL.createObjectURL(archivo));
+    }
+
+
     protected enviar() {
-        if (this.formulario.invalid) {
+        if (this.formulario.invalid || this.errorArchivo()) {
             this.formulario.markAllAsTouched();
             return;
         }
@@ -61,9 +98,16 @@ export class Registro {
         this.error.set('');
         this.cargando.set(true);
 
-        const { repetirContrasena, ...datos } = this.formulario.getRawValue();
+    const { repetirContrasena, ...datos } = this.formulario.getRawValue();
 
-        this.auth.registro(datos).subscribe({
+    const formData = new FormData();
+    
+    Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor));
+    if (this.archivo) {
+        formData.append('imagenPerfil', this.archivo);
+    }
+
+    this.auth.registro(formData).subscribe({
             next: () => {
                 this.router.navigate(['/login']);
             },
@@ -77,4 +121,6 @@ export class Registro {
             },
         });
     }
+
+
 }

@@ -32,7 +32,7 @@ export class Auth {
         return this.http.post<RespuestaLogin>(`${API_URL}/auth/login`, datos); //observable<RespuestaLogin>
     }
 
-    registro(datos: DatosRegistro) {
+    registro(datos: FormData) {
         return this.http.post(`${API_URL}/auth/registro`, datos);
     }
 }

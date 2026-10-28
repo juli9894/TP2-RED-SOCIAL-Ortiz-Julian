@@ -130,6 +130,30 @@
                 }
             </div>
 
+            <div class="mb-4">
+                <label class="form-label" for="imagenPerfil">
+                    Foto de perfil <span class="text-body-secondary">(opcional)</span>
+                </label>
+                <input
+                    id="imagenPerfil"
+                    type="file"
+                    accept="image/*"
+                    class="form-control"
+                    (change)="seleccionarArchivo($event)"
+                    [class.is-invalid]="errorArchivo()"
+                />
+                @if (errorArchivo()) {
+                    <div class="invalid-feedback">{{ errorArchivo() }}</div>
+                }
+                @if (vistaPrevia()) {
+                    <img
+                        class="vista-previa mt-3"
+                        [src]="vistaPrevia()"
+                        alt="Vista previa de la foto de perfil"
+                    />
+                }
+            </div>
+
             @if (error()) {
                 <div class="alert alert-danger" role="alert">{{ error() }}</div>
             }
