@@ -110,3 +110,26 @@ a:hover {
     max-width: 30rem;
     margin: 1rem auto;
 }
+
+/* ---------- Estado vacío (pantallas sin contenido todavía) ---------- */
+.estado-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 3rem 1rem;
+    border: 1px dashed var(--rs-borde);
+    border-radius: var(--rs-radio);
+    color: var(--rs-texto-suave);
+    text-align: center;
+}
+
+.estado-vacio i {
+    font-size: 2.5rem;
+    color: var(--rs-accion);
+}
+
+.estado-vacio p {
+    margin: 0;
+}
