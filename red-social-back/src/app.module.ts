@@ -10,6 +10,7 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module.js';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    //conexion con MongoDB
     MongooseModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

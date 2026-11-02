@@ -31,7 +31,7 @@ export class UsuariosService {
         return this.usuarioModel.create({
         ...datos,
         contrasena: contrasenaHasheada,
-        });
+        });//devuelve el documento a registro() de auth.service.ts
     }
 
     async buscarPorUsuarioOCorreo(valor: string) {

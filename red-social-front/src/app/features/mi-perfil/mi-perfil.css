@@ -1,0 +1,38 @@
+.perfil-datos {
+    padding: 1.25rem;
+}
+
+.perfil-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.perfil-foto {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.perfil-foto-icono {
+    font-size: 96px;
+    line-height: 1;
+}
+
+.perfil-lista {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1.25rem;
+    margin: 0;
+}
+
+.perfil-lista dt {
+    color: var(--rs-texto-suave);
+    font-weight: 600;
+}
+
+.perfil-lista dd {
+    margin: 0;
+}

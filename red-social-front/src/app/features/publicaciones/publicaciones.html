@@ -1,8 +1,84 @@
 <section>
     <h1>Publicaciones</h1>
 
-    <div class="estado-vacio">
-        <i class="bi bi-chat-square-text" aria-hidden="true"></i>
-        <p>Todavía no hay publicaciones.</p>
+    <app-nueva-publicacion (publicada)="irAPagina(0)" />
+
+    <div class="barra-orden">
+        <span>Ordenar por:</span>
+        <div class="btn-group" role="group" aria-label="Ordenar publicaciones">
+            <button
+                type="button"
+                class="btn btn-secundario btn-sm"
+                [class.active]="orden() === 'fecha'"
+                [attr.aria-pressed]="orden() === 'fecha'"
+                (click)="cambiarOrden('fecha')"
+            >
+                Más recientes
+            </button>
+            <button
+                type="button"
+                class="btn btn-secundario btn-sm"
+                [class.active]="orden() === 'meGusta'"
+                [attr.aria-pressed]="orden() === 'meGusta'"
+                (click)="cambiarOrden('meGusta')"
+            >
+                Más me gusta
+            </button>
+        </div>
     </div>
+
+    @if (aviso()) {
+        <div class="alert alert-danger">{{ aviso() }}</div>
+    }
+
+    @if (cargando()) {
+        <p>Cargando...</p>
+    } @else if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    } @else if (publicaciones().length === 0) {
+        <div class="estado-vacio">
+            <i class="bi bi-chat-square-text" aria-hidden="true"></i>
+            <p>Todavía no hay publicaciones.</p>
+        </div>
+    } @else {
+        @for (publicacion of publicaciones(); track publicacion._id) {
+            <app-tarjeta-publicacion
+                [publicacion]="publicacion"
+                (alternarMeGusta)="alternarMeGusta($event)"
+                (eliminar)="pedirEliminar($event)"
+            />
+        }
+    }
+
+    @if (!cargando() && (pagina() > 0 || hayMas())) {
+        <nav class="paginacion" aria-label="Paginación">
+            <button
+                type="button"
+                class="btn btn-secundario btn-sm"
+                [disabled]="pagina() === 0"
+                (click)="irAPagina(pagina() - 1)"
+            >
+                Anterior
+            </button>
+            <span>Página {{ pagina() + 1 }}</span>
+            <button
+                type="button"
+                class="btn btn-secundario btn-sm"
+                [disabled]="!hayMas()"
+                (click)="irAPagina(pagina() + 1)"
+            >
+                Siguiente
+            </button>
+        </nav>
+    }
+
+    @if (idPorEliminar()) {
+        <app-modal-confirmacion
+            titulo="Eliminar publicación"
+            mensaje="¿Seguro que querés eliminar esta publicación? Ya no se va a mostrar."
+            textoConfirmar="Eliminar"
+            (confirmar)="confirmarEliminar()"
+            (cancelar)="cancelarEliminar()"
+        />
+    }
 </section>

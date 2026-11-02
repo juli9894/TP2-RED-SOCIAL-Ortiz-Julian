@@ -17,19 +17,19 @@ export class AuthService {
         private configService: ConfigService,
     ) {}
 
-    async registro(datos: CrearUsuarioDto, archivo?: ArchivoSubido) {
+    async registro(datos: CrearUsuarioDto, archivo?: ArchivoSubido) { 
         let imagenPerfil: string | undefined;
 
         if (archivo) {
             if (!archivo.mimetype.startsWith('image/')) {
                 throw new BadRequestException('El archivo debe ser una imagen');
             }
-            imagenPerfil = await this.cloudinaryService.subirImagen(archivo);
+            imagenPerfil = await this.cloudinaryService.subirImagen(archivo);//sube archivo a cloudinary y devuelve la url de la imagen
         }
 
-        const usuario = await this.usuariosService.crear({ ...datos, imagenPerfil });
-        const { contrasena, ...sinContrasena } = usuario.toObject();
-        return sinContrasena;
+        const usuario = await this.usuariosService.crear({ ...datos, imagenPerfil });//crea usuario en la base de datos con los datos del formulario y la url de la imagen de perfil (si se subió una imagen)
+        const { contrasena, ...sinContrasena } = usuario.toObject();//convierte el documento de mongoose a un objeto plano y descarta la contraseña para no enviarla al frontend
+        return sinContrasena;//retorna a auth.controller.ts registro()
     }
 
     async login(datos: LoginDto) {

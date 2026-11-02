@@ -1,8 +1,50 @@
 <section>
     <h1>Mi perfil</h1>
 
-    <div class="estado-vacio">
-        <i class="bi bi-person-circle" aria-hidden="true"></i>
-        <p>Acá vas a ver los datos de tu perfil.</p>
-    </div>
+    @if (usuario(); as yo) {
+        <article class="card perfil-datos mb-4">
+            <div class="perfil-cabecera">
+                @if (yo.imagenPerfil; as foto) {
+                    <img
+                        class="perfil-foto"
+                        [src]="foto"
+                        alt="Foto de perfil de {{ yo.usuario }}"
+                    />
+                } @else {
+                    <i class="bi bi-person-circle perfil-foto-icono" aria-hidden="true"></i>
+                }
+                <h2 class="h4 mb-0">{{ yo.nombre }} {{ yo.apellido }}</h2>
+            </div>
+
+            <dl class="perfil-lista">
+                <dt>Usuario</dt>
+                <dd>{{ yo.usuario }}</dd>
+                <dt>Correo</dt>
+                <dd>{{ yo.correo }}</dd>
+                <dt>Fecha de nacimiento</dt>
+                <dd>{{ yo.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }}</dd>
+                <dt>Perfil</dt>
+                <dd class="text-capitalize">{{ yo.perfil }}</dd>
+                <dt>Descripción</dt>
+                <dd>{{ yo.descripcion }}</dd>
+            </dl>
+        </article>
+
+        <h2 class="h4">Mis últimas publicaciones</h2>
+
+        @if (cargando()) {
+            <p>Cargando...</p>
+        } @else if (error()) {
+            <div class="alert alert-danger">{{ error() }}</div>
+        } @else if (publicaciones().length === 0) {
+            <div class="estado-vacio">
+                <i class="bi bi-chat-square-text" aria-hidden="true"></i>
+                <p>Todavía no publicaste nada.</p>
+            </div>
+        } @else {
+            @for (publicacion of publicaciones(); track publicacion._id) {
+                <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
+            }
+        }
+    }
 </section>

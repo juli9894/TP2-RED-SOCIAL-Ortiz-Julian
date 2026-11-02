@@ -18,13 +18,13 @@ export class AuthController {
 
     @Post('registro')
     @UseInterceptors(
-        FileInterceptor('imagenPerfil', { limits: { fileSize: 2 * 1024 * 1024 } }),
-    )
+        FileInterceptor('imagenPerfil', { limits: { fileSize: 2 * 1024 * 1024 } }),//busca imagen y separa texto, usa multer para manejar multipart/form-data, limita el tamaño del archivo a 2 MB
+    )//pasa al request, en req.file, el archivo subido, y en req.body, los datos del formulario
     registro(
-        @Body() datos: CrearUsuarioDto,
-        @UploadedFile() archivo?: ArchivoSubido,
+        @Body() datos: CrearUsuarioDto, //lee req.body
+        @UploadedFile() archivo?: ArchivoSubido, //lee req.file
     ) {
-        return this.authService.registro(datos, archivo);
+        return this.authService.registro(datos, archivo);//devuelve el usuario creado sin la contraseña, a auth.ts registro()
     }
 
     @Post('login')

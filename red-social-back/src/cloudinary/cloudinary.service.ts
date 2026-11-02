@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary, type UploadApiOptions } from 'cloudinary';
 
 export interface ArchivoSubido {
     buffer: Buffer;
@@ -19,20 +19,30 @@ export class CloudinaryService {
         });
     }
 
+    // Foto de perfil: cuadrada de 400x400
     subirImagen(archivo: ArchivoSubido): Promise<string> {
+        return this.subir(archivo, {
+            folder: 'teresuelvo/perfiles',
+            transformation: [{ width: 400, height: 400, crop: 'fill' }],
+        });
+    }
+
+    // Imagen de publicación: se respeta la proporción, con un ancho máximo de 1200
+    subirImagenPublicacion(archivo: ArchivoSubido): Promise<string> {
+        return this.subir(archivo, {
+            folder: 'teresuelvo/publicaciones',
+            transformation: [{ width: 1200, crop: 'limit' }],
+        });
+    }
+
+    private subir(archivo: ArchivoSubido, opciones: UploadApiOptions): Promise<string> {
         return new Promise((resolve, reject) => {
-            const flujo = cloudinary.uploader.upload_stream(
-                {
-                    folder: 'teresuelvo/perfiles',
-                    transformation: [{ width: 400, height: 400, crop: 'fill' }],
-                },
-                (error, resultado) => {
-                    if (error || !resultado) {
-                        return reject(error ?? new Error('No se pudo subir la imagen'));
-                    }
-                    resolve(resultado.secure_url);
-                },
-            );
+            const flujo = cloudinary.uploader.upload_stream(opciones, (error, resultado) => {
+                if (error || !resultado) {
+                    return reject(error ?? new Error('No se pudo subir la imagen'));
+                }
+                resolve(resultado.secure_url);
+            });
             flujo.end(archivo.buffer);
         });
     }

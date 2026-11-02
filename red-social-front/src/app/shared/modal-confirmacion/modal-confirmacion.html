@@ -1,0 +1,32 @@
+<!-- 1. Fondo oscuro que tapa la pantalla -->
+<div class="modal-backdrop show"></div>
+
+<!-- 2. Capa de la ventana. Tocar afuera de la caja = cancelar -->
+<div
+    class="modal d-block"
+    tabindex="-1"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal"
+    (click)="cancelar.emit()"
+>
+    <!-- 3. stopPropagation: tocar ADENTRO de la caja no cuenta como "tocar afuera" -->
+    <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="titulo-modal">{{ titulo() }}</h2>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">{{ mensaje() }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secundario" (click)="cancelar.emit()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" (click)="confirmar.emit()">
+                    {{ textoConfirmar() }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+<form class="card nueva mb-4" [formGroup]="formulario" (ngSubmit)="enviar()">
+    <h2 class="h5">Nueva publicación</h2>
+
+    <div class="mb-3">
+        <label class="form-label" for="titulo">Título</label>
+        <input id="titulo" class="form-control" type="text" formControlName="titulo" />
+        @if (formulario.controls.titulo.touched && formulario.controls.titulo.invalid) {
+            <div class="text-danger small">El título es obligatorio</div>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="mensaje">Mensaje</label>
+        <textarea id="mensaje" class="form-control" rows="3" formControlName="mensaje"></textarea>
+        @if (formulario.controls.mensaje.touched && formulario.controls.mensaje.invalid) {
+            <div class="text-danger small">El mensaje es obligatorio</div>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="imagen">Imagen (opcional)</label>
+        <input
+            #entradaArchivo
+            id="imagen"
+            class="form-control"
+            type="file"
+            accept="image/*"
+            (change)="seleccionarArchivo($event)"
+        />
+        @if (errorArchivo()) {
+            <div class="text-danger small">{{ errorArchivo() }}</div>
+        }
+        @if (vistaPrevia(); as vista) {
+            <img class="nueva-vista" [src]="vista" alt="Vista previa de la imagen" />
+            <button type="button" class="btn btn-secundario btn-sm mt-2" (click)="limpiarArchivo()">
+                Quitar imagen
+            </button>
+        }
+    </div>
+
+    @if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    }
+
+    <button class="btn btn-accion align-self-start" type="submit" [disabled]="enviando()">
+        {{ enviando() ? 'Publicando...' : 'Publicar' }}
+    </button>
+</form>

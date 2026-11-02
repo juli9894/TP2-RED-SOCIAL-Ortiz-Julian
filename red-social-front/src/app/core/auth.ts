@@ -12,6 +12,8 @@ export interface RespuestaLogin {
         usuario: string;
         correo: string;
         perfil: string;
+        fechaNacimiento: string; // llega como texto ISO: "1995-03-20T00:00:00.000Z"
+        descripcion: string;
         imagenPerfil?: string;
     };
 }
@@ -32,6 +34,7 @@ export interface DatosRegistro {
 export class Auth {
     private http = inject(HttpClient);
     private readonly clave = 'usuario';
+    private readonly claveToken = 'token';
 
     // null = invitado; con valor = hay alguien logueado
     readonly usuarioActual = signal<UsuarioSesion | null>(this.leerGuardado());
@@ -42,20 +45,34 @@ export class Auth {
                 this.usuarioActual.set(respuesta.usuario);
                 try {
                     localStorage.setItem(this.clave, JSON.stringify(respuesta.usuario));
+                    localStorage.setItem(this.claveToken, respuesta.token);
                 } catch {}
             }),
         );
     }
 
+
     registro(datos: FormData) {
         return this.http.post(`${API_URL}/auth/registro`, datos);
-    }
+        //Prepara la petición POST, no la envia aun, 
+        //url: API_URL/auth/registro, body: datos, headers: { 'Content-Type': 'multipart/form-data' } metod: post
+        //retorna a features/registro/registro.ts registro() que se suscribe y envia la petición
+    } 
 
     cerrarSesion() {
         this.usuarioActual.set(null);
         try {
             localStorage.removeItem(this.clave);
+            localStorage.removeItem(this.claveToken);
         } catch {}
+    }
+
+    obtenerToken(): string | null {
+        try {
+            return localStorage.getItem(this.claveToken);
+        } catch {
+            return null;
+        }
     }
 
     private leerGuardado(): UsuarioSesion | null {

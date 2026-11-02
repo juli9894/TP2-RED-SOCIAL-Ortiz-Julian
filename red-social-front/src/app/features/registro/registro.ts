@@ -61,8 +61,8 @@ export class Registro {
 
 
     protected seleccionarArchivo(evento: Event) {
-        const input = evento.target as HTMLInputElement;
-        const archivo = input.files?.[0] ?? null;
+        const input = evento.target as HTMLInputElement;//evento.target es el input donde paso el cambio, lo casteo a HTMLInputElement para poder acceder a sus propiedades
+        const archivo = input.files?.[0] ?? null;//File o null, si no hay nada seleccionado
 
         this.archivo = null;
         this.errorArchivo.set('');
@@ -72,12 +72,14 @@ export class Registro {
             return;
         }
 
+        //que sea una imagen
         if (!archivo.type.startsWith('image/')) {
             this.errorArchivo.set('El archivo debe ser una imagen.');
             input.value = '';
             return;
         }
 
+        //que pese menos de 2 MB
         if (archivo.size > 2 * 1024 * 1024) {
             this.errorArchivo.set('La imagen no puede pesar más de 2 MB.');
             input.value = '';
@@ -85,29 +87,32 @@ export class Registro {
         }
 
         this.archivo = archivo;
+        //URL con la imagen para mostrarla en el preview
         this.vistaPrevia.set(URL.createObjectURL(archivo));
     }
 
-
+    
     protected enviar() {
-        if (this.formulario.invalid || this.errorArchivo()) {
-            this.formulario.markAllAsTouched();
-            return;
+        
+        if (this.formulario.invalid || this.errorArchivo()) { 
+            this.formulario.markAllAsTouched(); //marca en rojo
+            return;//frena el envio
         }
 
         this.error.set('');
         this.cargando.set(true);
 
-    const { repetirContrasena, ...datos } = this.formulario.getRawValue();
+    const { repetirContrasena, ...datos } = this.formulario.getRawValue(); //descarta el campo repetirContrasena, que no es necesario enviar al backend
 
     const formData = new FormData();
     
-    Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor));
+
+    Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor));//arreglo de pares 
     if (this.archivo) {
-        formData.append('imagenPerfil', this.archivo);
+        formData.append('imagenPerfil', this.archivo);//si se seleccionó un archivo, lo agrego al formData con la clave 'imagenPerfil'
     }
 
-    this.auth.registro(formData).subscribe({
+    this.auth.registro(formData).subscribe({//viaja al puerto de escucha del backend, que es el 3000, y se dirige al endpoint /auth/registro.
             next: () => {
                 this.router.navigate(['/login']);
             },

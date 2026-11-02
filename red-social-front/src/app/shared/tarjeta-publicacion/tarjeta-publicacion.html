@@ -1,0 +1,56 @@
+<article class="card tarjeta mb-3">
+    <header class="tarjeta-autor">
+        @if (publicacion().autor.imagenPerfil; as foto) {
+            <img
+                class="tarjeta-avatar"
+                [src]="foto"
+                alt="Foto de {{ publicacion().autor.usuario }}"
+            />
+        } @else {
+            <i class="bi bi-person-circle tarjeta-avatar-icono" aria-hidden="true"></i>
+        }
+        <div>
+            <strong>{{ publicacion().autor.usuario }}</strong>
+            <small class="tarjeta-fecha">
+                {{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </small>
+        </div>
+    </header>
+
+    <h2 class="h5">{{ publicacion().titulo }}</h2>
+    <p>{{ publicacion().mensaje }}</p>
+
+    @if (publicacion().imagen; as imagen) {
+        <img class="tarjeta-imagen" [src]="imagen" alt="Imagen de la publicación" />
+    }
+
+    <footer class="tarjeta-pie">
+        <button
+            type="button"
+            class="btn-corazon"
+            [class.activo]="yaMeGusta()"
+            [attr.aria-pressed]="yaMeGusta()"
+            [disabled]="soloLectura()"
+            aria-label="Me gusta"
+            (click)="tocarCorazon()"
+        >
+            <i
+                class="bi"
+                [class.bi-heart]="!yaMeGusta()"
+                [class.bi-heart-fill]="yaMeGusta()"
+                aria-hidden="true"
+            ></i>
+        </button>
+        {{ publicacion().cantidadMeGusta }} me gusta
+        @if (puedeEliminar()) {
+            <button
+                type="button"
+                class="btn-eliminar"
+                aria-label="Eliminar publicación"
+                (click)="tocarEliminar()"
+            >
+                <i class="bi bi-trash" aria-hidden="true"></i>
+            </button>
+        }   
+    </footer>
+</article>

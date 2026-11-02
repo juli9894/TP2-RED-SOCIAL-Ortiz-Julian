@@ -1,0 +1,81 @@
+.tarjeta {
+    padding: 1rem;
+}
+
+.tarjeta-autor {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.tarjeta-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.tarjeta-avatar-icono {
+    font-size: 40px;
+    line-height: 1;
+}
+
+.tarjeta-fecha {
+    display: block;
+    opacity: 0.7;
+}
+
+.tarjeta-imagen {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: 360px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tarjeta-pie {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-corazon {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--rs-texto-suave);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.btn-corazon:hover {
+    color: var(--rs-accion-clara);
+}
+
+.btn-corazon.activo {
+    color: var(--rs-accion);
+}
+
+.btn-eliminar {
+    margin-left: auto; /* empuja el tacho hacia la derecha del pie */
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--rs-texto-suave);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.btn-corazon:hover:not(:disabled) {
+    color: var(--rs-accion-clara);
+}
+
+.btn-corazon:disabled {
+    cursor: default;
+}
