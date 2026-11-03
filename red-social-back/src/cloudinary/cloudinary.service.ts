@@ -1,13 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary, type UploadApiOptions } from 'cloudinary';
-
-export interface ArchivoSubido {
-    buffer: Buffer;
-    mimetype: string;
-    size: number;
-    originalname: string;
-}
+import type { ArchivoSubido } from './interfaces/archivo-subido.interface.js';
 
 @Injectable()
 export class CloudinaryService {
@@ -19,7 +13,7 @@ export class CloudinaryService {
         });
     }
 
-    // Foto de perfil: cuadrada de 400x400
+    // [CICLO REGISTRO · paso 4/6] Foto de perfil: cuadrada de 400x400
     subirImagen(archivo: ArchivoSubido): Promise<string> {
         return this.subir(archivo, {
             folder: 'teresuelvo/perfiles',
@@ -27,7 +21,7 @@ export class CloudinaryService {
         });
     }
 
-    // Imagen de publicación: se respeta la proporción, con un ancho máximo de 1200
+    // [CICLO PUBLICAR · paso 5/7] Imagen de publicación: se respeta la proporción, con un ancho máximo de 1200
     subirImagenPublicacion(archivo: ArchivoSubido): Promise<string> {
         return this.subir(archivo, {
             folder: 'teresuelvo/publicaciones',
@@ -35,7 +29,17 @@ export class CloudinaryService {
         });
     }
 
+    // Validación única para todas las subidas: el archivo tiene que ser una imagen (400 si no)
+    private validarImagen(archivo: ArchivoSubido) {
+        if (!archivo.mimetype.startsWith('image/')) {
+            throw new BadRequestException('El archivo debe ser una imagen');
+        }
+    }
+
+    // Sube el archivo a Cloudinary y devuelve la URL pública (https) de la imagen
     private subir(archivo: ArchivoSubido, opciones: UploadApiOptions): Promise<string> {
+        this.validarImagen(archivo);
+
         return new Promise((resolve, reject) => {
             const flujo = cloudinary.uploader.upload_stream(opciones, (error, resultado) => {
                 if (error || !resultado) {

@@ -16,23 +16,23 @@ export class NuevaPublicacion {
     // Acceso al <input type="file" #entradaArchivo> del HTML
     private entradaArchivo = viewChild<ElementRef<HTMLInputElement>>('entradaArchivo');
 
-    // 1. Aviso hacia el padre: "ya publiqué, recargá la lista"
+    // Aviso hacia el padre (publicaciones.html): "ya publiqué, recargá la lista"
     readonly publicada = output<void>();
 
-    // 2. Formulario (el pattern evita textos que sean solo espacios)
+    // Formulario (el pattern evita textos que sean solo espacios)
     readonly formulario = this.fb.nonNullable.group({
         titulo: ['', [Validators.required, Validators.pattern(/\S/)]],
         mensaje: ['', [Validators.required, Validators.pattern(/\S/)]],
     });
 
-    // 3. El archivo elegido (File) y cosas de la pantalla
+    // El archivo elegido (File) y cosas de la pantalla
     private archivo: File | null = null;
     readonly vistaPrevia = signal<string | null>(null);
     readonly errorArchivo = signal('');
     readonly enviando = signal(false);
     readonly error = signal('');
 
-    // 4. Lo llama el (change) del campo de archivo
+    // Lo llama el (change) del campo de archivo: valida y arma la vista previa
     seleccionarArchivo(evento: Event) {
         const entrada = evento.target as HTMLInputElement;
         const elegido = entrada.files?.[0];
@@ -65,7 +65,7 @@ export class NuevaPublicacion {
         if (entrada) entrada.nativeElement.value = '';
     }
 
-    // 5. Lo llama el (ngSubmit) del formulario
+    // [CICLO PUBLICAR · paso 1/7] Lo llama el (ngSubmit) del formulario de nueva-publicacion.html
     enviar() {
         if (this.formulario.invalid) {
             this.formulario.markAllAsTouched();
@@ -74,7 +74,7 @@ export class NuevaPublicacion {
         this.enviando.set(true);
         this.error.set('');
 
-        // 6. El paquete: texto + archivo. 'imagen' es el nombre que espera el back
+        // El paquete: texto + archivo. 'imagen' es el nombre que espera el back (FileInterceptor)
         const datos = new FormData();
         datos.append('titulo', this.formulario.controls.titulo.value.trim());
         datos.append('mensaje', this.formulario.controls.mensaje.value.trim());
@@ -82,8 +82,10 @@ export class NuevaPublicacion {
             datos.append('imagen', this.archivo);
         }
 
-        // 7. Ahora sí se envía (subscribe)
+        // Paso 2: this.api.crear() (core/publicaciones-api.ts) prepara el POST; el subscribe lo envía
         this.api.crear(datos).subscribe({
+            // [paso 6/7] El back guardó la publicación: limpio el formulario y aviso al padre,
+            // que ejecuta irAPagina(0) y vuelve a cargar la lista [paso 7/7]
             next: () => {
                 this.formulario.reset();
                 this.limpiarArchivo();

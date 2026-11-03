@@ -7,7 +7,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import type { ArchivoSubido } from '../cloudinary/cloudinary.service.js';
+import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
 import { CrearUsuarioDto } from '../usuarios/dto/crear-usuario.dto.js';
 import { LoginDto } from '../usuarios/dto/login.dto.js';
 import { AuthService } from './auth.service.js';
@@ -16,17 +16,22 @@ import { AuthService } from './auth.service.js';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
+    // [CICLO REGISTRO · paso 3/6] POST /auth/registro (multipart/form-data)
     @Post('registro')
     @UseInterceptors(
-        FileInterceptor('imagenPerfil', { limits: { fileSize: 2 * 1024 * 1024 } }),//busca imagen y separa texto, usa multer para manejar multipart/form-data, limita el tamaño del archivo a 2 MB
-    )//pasa al request, en req.file, el archivo subido, y en req.body, los datos del formulario
+        // FileInterceptor usa multer: separa el archivo ('imagenPerfil', máx. 2 MB) del texto.
+        // El archivo queda en req.file y los campos de texto en req.body
+        FileInterceptor('imagenPerfil', { limits: { fileSize: 2 * 1024 * 1024 } }),
+    )
     registro(
-        @Body() datos: CrearUsuarioDto, //lee req.body
-        @UploadedFile() archivo?: ArchivoSubido, //lee req.file
+        @Body() datos: CrearUsuarioDto, // lee req.body (validado por el ValidationPipe de main.ts)
+        @UploadedFile() archivo?: ArchivoSubido, // lee req.file
     ) {
-        return this.authService.registro(datos, archivo);//devuelve el usuario creado sin la contraseña, a auth.ts registro()
+        // Devuelve el usuario creado (sin contraseña) a auth.ts → registro.ts
+        return this.authService.registro(datos, archivo);
     }
 
+    // [CICLO LOGIN · paso 3/6] POST /auth/login
     @Post('login')
     @HttpCode(200)
     login(@Body() datos: LoginDto) {

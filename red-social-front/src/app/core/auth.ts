@@ -2,33 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
 import { API_URL } from './api';
-
-export interface RespuestaLogin {
-    token: string;
-    usuario: {
-        _id: string;
-        nombre: string;
-        apellido: string;
-        usuario: string;
-        correo: string;
-        perfil: string;
-        fechaNacimiento: string; // llega como texto ISO: "1995-03-20T00:00:00.000Z"
-        descripcion: string;
-        imagenPerfil?: string;
-    };
-}
-
-export type UsuarioSesion = RespuestaLogin['usuario'];
-
-export interface DatosRegistro {
-    nombre: string;
-    apellido: string;
-    correo: string;
-    usuario: string;
-    contrasena: string;
-    fechaNacimiento: string;
-    descripcion: string;
-}
+import type { DatosLogin, RespuestaLogin, UsuarioSesion } from './models/usuario.model';
 
 @Injectable({ providedIn: 'root' })
 export class Auth {
@@ -39,34 +13,39 @@ export class Auth {
     // null = invitado; con valor = hay alguien logueado
     readonly usuarioActual = signal<UsuarioSesion | null>(this.leerGuardado());
 
-    login(datos: { usuarioOCorreo: string; contrasena: string }) {
+    // [CICLO LOGIN · paso 2/6] Prepara el POST a /auth/login. No se envía hasta el subscribe de login.ts
+    // [CICLO LOGIN · paso 6/6] Cuando el back responde, el tap guarda usuario y token (signal + localStorage)
+    login(datos: DatosLogin) {
         return this.http.post<RespuestaLogin>(`${API_URL}/auth/login`, datos).pipe(
             tap((respuesta) => {
                 this.usuarioActual.set(respuesta.usuario);
                 try {
                     localStorage.setItem(this.clave, JSON.stringify(respuesta.usuario));
                     localStorage.setItem(this.claveToken, respuesta.token);
-                } catch {}
+                } catch {
+                    // si localStorage no está disponible, la sesión dura solo hasta recargar
+                }
             }),
         );
     }
 
-
+    // [CICLO REGISTRO · paso 2/6] Prepara el POST a /auth/registro con el FormData (texto + foto).
+    // No se envía hasta el subscribe de registro.ts. No ponemos Content-Type: el navegador lo arma solo para FormData
     registro(datos: FormData) {
         return this.http.post(`${API_URL}/auth/registro`, datos);
-        //Prepara la petición POST, no la envia aun, 
-        //url: API_URL/auth/registro, body: datos, headers: { 'Content-Type': 'multipart/form-data' } metod: post
-        //retorna a features/registro/registro.ts registro() que se suscribe y envia la petición
-    } 
+    }
 
     cerrarSesion() {
         this.usuarioActual.set(null);
         try {
             localStorage.removeItem(this.clave);
             localStorage.removeItem(this.claveToken);
-        } catch {}
+        } catch {
+            // si localStorage no está disponible no hay nada que borrar
+        }
     }
 
+    // Lo usa token.interceptor.ts para agregar el token a cada pedido
     obtenerToken(): string | null {
         try {
             return localStorage.getItem(this.claveToken);
@@ -75,6 +54,7 @@ export class Auth {
         }
     }
 
+    // Al iniciar la app recupera el usuario guardado (así F5 no cierra la sesión)
     private leerGuardado(): UsuarioSesion | null {
         try {
             const guardado = localStorage.getItem(this.clave);

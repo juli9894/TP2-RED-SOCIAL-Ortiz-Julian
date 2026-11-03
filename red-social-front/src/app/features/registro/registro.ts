@@ -1,8 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import { AbstractControl , FormBuilder , ReactiveFormsModule , ValidationErrors , Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormBuilder,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth';
 
+// Validador del grupo: la contraseña y su repetición tienen que ser iguales
 function contrasenasIguales(grupo: AbstractControl): ValidationErrors | null {
     const contrasena = grupo.get('contrasena')?.value;
     const repetir = grupo.get('repetirContrasena')?.value;
@@ -20,13 +27,11 @@ export class Registro {
     private auth = inject(Auth);
     private router = inject(Router);
 
-
     protected error = signal('');
     protected cargando = signal(false);
     protected errorArchivo = signal('');
     protected vistaPrevia = signal<string | null>(null);
     private archivo: File | null = null;
-
 
     protected formulario = this.fb.nonNullable.group(
         {
@@ -45,12 +50,11 @@ export class Registro {
         { validators: contrasenasIguales },
     );
 
-
+    // Para mostrar el campo en rojo solo si está mal y el usuario ya lo tocó
     protected invalido(campo: string) {
         const control = this.formulario.get(campo);
         return !!control && control.invalid && control.touched;
     }
-
 
     protected noCoinciden() {
         return (
@@ -59,10 +63,11 @@ export class Registro {
         );
     }
 
-
+    // Lo llama el (change) del campo de la foto: valida y arma la vista previa
     protected seleccionarArchivo(evento: Event) {
-        const input = evento.target as HTMLInputElement;//evento.target es el input donde paso el cambio, lo casteo a HTMLInputElement para poder acceder a sus propiedades
-        const archivo = input.files?.[0] ?? null;//File o null, si no hay nada seleccionado
+        // evento.target es el input donde pasó el cambio; lo casteo para acceder a .files
+        const input = evento.target as HTMLInputElement;
+        const archivo = input.files?.[0] ?? null; // File o null si no hay nada seleccionado
 
         this.archivo = null;
         this.errorArchivo.set('');
@@ -72,14 +77,14 @@ export class Registro {
             return;
         }
 
-        //que sea una imagen
+        // que sea una imagen
         if (!archivo.type.startsWith('image/')) {
             this.errorArchivo.set('El archivo debe ser una imagen.');
             input.value = '';
             return;
         }
 
-        //que pese menos de 2 MB
+        // que pese menos de 2 MB
         if (archivo.size > 2 * 1024 * 1024) {
             this.errorArchivo.set('La imagen no puede pesar más de 2 MB.');
             input.value = '';
@@ -87,32 +92,34 @@ export class Registro {
         }
 
         this.archivo = archivo;
-        //URL con la imagen para mostrarla en el preview
+        // URL temporal con la imagen para mostrarla en la vista previa
         this.vistaPrevia.set(URL.createObjectURL(archivo));
     }
 
-    
+    // [CICLO REGISTRO · paso 1/6] Lo llama el (ngSubmit) del formulario de registro.html
     protected enviar() {
-        
-        if (this.formulario.invalid || this.errorArchivo()) { 
-            this.formulario.markAllAsTouched(); //marca en rojo
-            return;//frena el envio
+        if (this.formulario.invalid || this.errorArchivo()) {
+            this.formulario.markAllAsTouched(); // marca en rojo
+            return; // frena el envío
         }
 
         this.error.set('');
         this.cargando.set(true);
 
-    const { repetirContrasena, ...datos } = this.formulario.getRawValue(); //descarta el campo repetirContrasena, que no es necesario enviar al backend
+        // repetirContrasena no hace falta mandarla al back: la descartamos
+        const { repetirContrasena, ...datos } = this.formulario.getRawValue();
 
-    const formData = new FormData();
-    
+        // El paquete: cada campo de texto + (si hay) la foto con la clave 'imagenPerfil'
+        const formData = new FormData();
+        Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor));
+        if (this.archivo) {
+            formData.append('imagenPerfil', this.archivo);
+        }
 
-    Object.entries(datos).forEach(([clave, valor]) => formData.append(clave, valor));//arreglo de pares 
-    if (this.archivo) {
-        formData.append('imagenPerfil', this.archivo);//si se seleccionó un archivo, lo agrego al formData con la clave 'imagenPerfil'
-    }
-
-    this.auth.registro(formData).subscribe({//viaja al puerto de escucha del backend, que es el 3000, y se dirige al endpoint /auth/registro.
+        // Paso 2: this.auth.registro() (core/auth.ts) prepara el POST; el subscribe lo envía
+        // al back (puerto 3000 en local), endpoint /auth/registro
+        this.auth.registro(formData).subscribe({
+            // [paso 6/6] El back creó el usuario: vamos a /login
             next: () => {
                 this.router.navigate(['/login']);
             },
@@ -126,6 +133,4 @@ export class Registro {
             },
         });
     }
-
-
 }

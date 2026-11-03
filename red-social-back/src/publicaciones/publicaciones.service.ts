@@ -1,19 +1,19 @@
 import {
     BadRequestException,
+    ConflictException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
-    ForbiddenException,
-    ConflictException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import type { Model } from 'mongoose';
-import type { ArchivoSubido } from '../cloudinary/cloudinary.service.js';
+import type { PayloadToken } from '../auth/interfaces/payload-token.interface.js';
 import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
+import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
 import { CrearPublicacionDto } from './dto/crear-publicacion.dto.js';
-import { Publicacion } from './schemas/publicacion.schema.js';
 import { ListarPublicacionesDto } from './dto/listar-publicaciones.dto.js';
-import type { PayloadToken } from '../auth/auth.guard.js';
+import { Publicacion } from './schemas/publicacion.schema.js';
 
 @Injectable()
 export class PublicacionesService {
@@ -23,6 +23,9 @@ export class PublicacionesService {
         private cloudinaryService: CloudinaryService,
     ) {}
 
+    // ─── CICLO PUBLICAR ─────────────────────────────────────────────
+
+    // [CICLO PUBLICAR · paso 5/7]
     async crear(
         datos: CrearPublicacionDto,
         autorId: string,
@@ -31,11 +34,8 @@ export class PublicacionesService {
         let imagen: string | undefined;
 
         if (archivo) {
-            if (!archivo.mimetype.startsWith('image/')) {
-                throw new BadRequestException('El archivo debe ser una imagen');
-            }
-            imagen =
-                await this.cloudinaryService.subirImagenPublicacion(archivo);
+            // Sube la imagen a Cloudinary (valida que sea imagen) y devuelve la URL
+            imagen = await this.cloudinaryService.subirImagenPublicacion(archivo);
         }
 
         return this.publicacionModel.create({
@@ -45,14 +45,17 @@ export class PublicacionesService {
         });
     }
 
+    // ─── CICLO LISTAR (y MI PERFIL) ─────────────────────────────────
+
+    // [CICLO LISTAR · paso 5/7]
     async listar(filtros: ListarPublicacionesDto) {
-        //valores por defecto si no vienen en el dto
+        // valores por defecto si no vienen en el dto
         const { orden = 'fecha', usuario, offset = 0, limit = 10 } = filtros;
 
-        //buscar publicaciones que no estén eliminadas
+        // buscar publicaciones que no estén eliminadas
         const consulta: Record<string, unknown> = { eliminada: false };
 
-        //filtro por usuario si viene en el dto
+        // filtro por usuario si viene en el dto (así lo usa Mi perfil)
         if (usuario) {
             consulta.autor = new Types.ObjectId(usuario);
         }
@@ -72,8 +75,10 @@ export class PublicacionesService {
             .populate('autor', 'usuario imagenPerfil');
     }
 
+    // ─── CICLO ELIMINAR ─────────────────────────────────────────────
+
+    // [CICLO ELIMINAR · paso 7/8]
     async eliminar(id: string, usuario: PayloadToken) {
-        // Si el id no tiene forma de id de Mongo, no se busca
         this.validarId(id);
 
         const publicacion = await this.publicacionModel.findOne({
@@ -84,6 +89,7 @@ export class PublicacionesService {
             throw new NotFoundException('Publicación no encontrada');
         }
 
+        // Solo el autor o un administrador pueden eliminar (403 si no)
         const esAutor = publicacion.autor.toString() === usuario.id;
         const esAdministrador = usuario.perfil === 'administrador';
 
@@ -91,31 +97,15 @@ export class PublicacionesService {
             throw new ForbiddenException('No podés eliminar esta publicación');
         }
 
-        // Baja lógica
+        // Baja lógica: no se borra de la base, se marca como eliminada
         publicacion.eliminada = true;
         await publicacion.save();
         return { mensaje: 'Publicación eliminada' };
     }
 
-    // Ayudante: si el id no tiene forma de id de Mongo, cortamos
-    private validarId(id: string) {
-        if (!Types.ObjectId.isValid(id)) {
-            throw new BadRequestException('El id no es válido');
-        }
-    }
+    // ─── CICLO ME GUSTA ─────────────────────────────────────────────
 
-    // Ayudante: se usa cuando el findOneAndUpdate no encontró nada.
-    // Averigua por qué y devuelve el error que corresponde
-    private async errorMeGusta(id: string, mensajeConflicto: string) {
-        const existe = await this.publicacionModel.exists({
-            _id: id,
-            eliminada: false,
-        });
-        return existe
-            ? new ConflictException(mensajeConflicto)
-            : new NotFoundException('Publicación no encontrada');
-    }
-
+    // [CICLO ME GUSTA · paso 6/7] dar me gusta
     async darMeGusta(id: string, usuarioId: string) {
         this.validarId(id);
         const autor = new Types.ObjectId(usuarioId);
@@ -134,6 +124,7 @@ export class PublicacionesService {
         return publicacion;
     }
 
+    // [CICLO ME GUSTA · paso 6/7] quitar me gusta
     async quitarMeGusta(id: string, usuarioId: string) {
         this.validarId(id);
         const autor = new Types.ObjectId(usuarioId);
@@ -149,5 +140,26 @@ export class PublicacionesService {
             throw await this.errorMeGusta(id, 'No le habías dado me gusta');
         }
         return publicacion;
+    }
+
+    // ─── AYUDANTES (los usan los métodos de arriba) ─────────────────
+
+    // Si el id no tiene forma de id de Mongo, cortamos con 400
+    private validarId(id: string) {
+        if (!Types.ObjectId.isValid(id)) {
+            throw new BadRequestException('El id no es válido');
+        }
+    }
+
+    // Se usa cuando el findOneAndUpdate no encontró nada.
+    // Averigua por qué y devuelve el error que corresponde (404 o 409)
+    private async errorMeGusta(id: string, mensajeConflicto: string) {
+        const existe = await this.publicacionModel.exists({
+            _id: id,
+            eliminada: false,
+        });
+        return existe
+            ? new ConflictException(mensajeConflicto)
+            : new NotFoundException('Publicación no encontrada');
     }
 }

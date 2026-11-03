@@ -6,20 +6,11 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import jwt from 'jsonwebtoken';
+import type { PayloadToken, PedidoAutenticado } from './interfaces/payload-token.interface.js';
 
-//estructura del payload que se espera en el token
-export interface PayloadToken {
-    id: string;
-    usuario: string;
-    perfil: string;
-}
-
-//req.ususario -> req.usuario.id, req.usuario.usuario, req.usuario.perfil
-export interface PedidoAutenticado {
-    headers: Record<string, string | undefined>;
-    usuario?: PayloadToken;
-}
-
+// [CICLO SESIÓN] Se aplica con @UseGuards(AuthGuard) en las rutas protegidas.
+// Lee la cabecera "Authorization: Bearer <token>", verifica el token y,
+// si es válido, deja los datos del usuario en pedido.usuario. Si no, responde 401.
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(private configService: ConfigService) {}

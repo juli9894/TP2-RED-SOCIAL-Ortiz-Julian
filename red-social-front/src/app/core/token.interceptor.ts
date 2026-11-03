@@ -3,20 +3,22 @@ import { inject } from '@angular/core';
 import { API_URL } from './api';
 import { Auth } from './auth';
 
+// [CICLO SESIÓN] Se ejecuta antes de CADA petición HTTP (registrado en app.config.ts).
+// Si hay token y la URL es del back, agrega la cabecera Authorization: Bearer <token>
 export const tokenInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
-    //obtengo el token del localStorage
+    // 1. Obtengo el token del localStorage
     const token = inject(Auth).obtenerToken();
 
-    //se lo envio al backend, si hay token y la url es del backend, sino lo dejo pasar
+    // 2. Si no hay token o la URL no es de nuestro back, la dejo pasar sin tocarla
     if (!token || !peticion.url.startsWith(API_URL)) {
         return siguiente(peticion);
     }
 
-    //se hace copia con el token en la cabecera Authorization, para que el backend pueda verificarlo y autenticar al usuario
+    // 3. Copia de la petición con el token, para que el back (AuthGuard) pueda autenticar al usuario
     const conToken = peticion.clone({
         setHeaders: { Authorization: `Bearer ${token}` },
     });
 
-    //viaja hacia la red
+    // 4. Viaja hacia la red
     return siguiente(conToken);
 };

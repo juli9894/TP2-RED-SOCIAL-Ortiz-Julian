@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Auth } from '../../core/auth';
-import { PublicacionesApi, type Publicacion } from '../../core/publicaciones-api';
+import { PublicacionesApi } from '../../core/publicaciones-api';
+import type { Publicacion } from '../../core/models/publicacion.model';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
 
 @Component({
@@ -13,15 +14,15 @@ import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-pub
 export class MiPerfil implements OnInit {
     private api = inject(PublicacionesApi);
 
-    // 1. Mis datos: salen de la sesión guardada, no hace falta pedirlos al back
+    // Mis datos: salen de la sesión guardada, no hace falta pedirlos al back
     readonly usuario = inject(Auth).usuarioActual;
 
-    // 2. Estado de la lista de mis publicaciones
+    // Estado de la lista de mis publicaciones
     readonly publicaciones = signal<Publicacion[]>([]);
     readonly cargando = signal(true);
     readonly error = signal('');
 
-    // 3. Angular lo ejecuta una vez, al crear la pantalla
+    // [CICLO MI PERFIL · paso 1/6] Angular lo ejecuta una vez, al crear la pantalla
     ngOnInit() {
         const yo = this.usuario();
         if (!yo) {
@@ -29,8 +30,10 @@ export class MiPerfil implements OnInit {
             return;
         }
 
-        // 4. Mis últimas 3 (el orden por defecto ya es "más recientes primero")
+        // Paso 2: mismo GET /publicaciones del CICLO LISTAR, pero filtrado por mi _id.
+        // Mis últimas 3 (el orden por defecto ya es "más recientes primero")
         this.api.listar({ usuario: yo._id, limit: 3 }).subscribe({
+            // [paso 6/6] Llegaron mis publicaciones (mi-perfil.html las dibuja en modo solo lectura)
             next: (lista) => {
                 this.publicaciones.set(lista);
                 this.cargando.set(false);
