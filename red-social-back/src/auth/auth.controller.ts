@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
+import { LIMITE_IMAGEN_PERFIL_BYTES } from '../common/constantes.js';
 import { CrearUsuarioDto } from '../usuarios/dto/crear-usuario.dto.js';
 import { LoginDto } from '../usuarios/dto/login.dto.js';
 import { AuthService } from './auth.service.js';
@@ -21,7 +22,7 @@ export class AuthController {
     @UseInterceptors(
         // FileInterceptor usa multer: separa el archivo ('imagenPerfil', máx. 2 MB) del texto.
         // El archivo queda en req.file y los campos de texto en req.body
-        FileInterceptor('imagenPerfil', { limits: { fileSize: 2 * 1024 * 1024 } }),
+        FileInterceptor('imagenPerfil', { limits: { fileSize: LIMITE_IMAGEN_PERFIL_BYTES } }),
     )
     registro(
         @Body() datos: CrearUsuarioDto, // lee req.body (validado por el ValidationPipe de main.ts)

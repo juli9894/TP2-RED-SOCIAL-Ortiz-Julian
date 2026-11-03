@@ -15,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../auth/auth.guard.js';
 import type { PedidoAutenticado } from '../auth/interfaces/payload-token.interface.js';
 import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
+import { LIMITE_IMAGEN_PUBLICACION_BYTES } from '../common/constantes.js';
 import { CrearPublicacionDto } from './dto/crear-publicacion.dto.js';
 import { ListarPublicacionesDto } from './dto/listar-publicaciones.dto.js';
 import { PublicacionesService } from './publicaciones.service.js';
@@ -29,7 +30,7 @@ export class PublicacionesController {
     @UseGuards(AuthGuard)
     @Post()
     @UseInterceptors(
-        FileInterceptor('imagen', { limits: { fileSize: 5 * 1024 * 1024 } }),
+        FileInterceptor('imagen', { limits: { fileSize: LIMITE_IMAGEN_PUBLICACION_BYTES } }),
     )
     crear(
         @Body() datos: CrearPublicacionDto,

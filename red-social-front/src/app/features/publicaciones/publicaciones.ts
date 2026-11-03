@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { PUBLICACIONES_POR_PAGINA } from '../../core/constantes';
 import { PublicacionesApi } from '../../core/publicaciones-api';
 import type { Publicacion } from '../../core/models/publicacion.model';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
@@ -14,8 +15,8 @@ import { ModalConfirmacion } from '../../shared/modal-confirmacion/modal-confirm
 export class Publicaciones implements OnInit {
     private api = inject(PublicacionesApi);
 
-    // Cuántas publicaciones se muestran por página
-    private readonly porPagina = 6;
+    // Cuántas publicaciones se muestran por página (valor en core/constantes.ts)
+    private readonly porPagina = PUBLICACIONES_POR_PAGINA;
 
     // ESTADO de la pantalla
     readonly publicaciones = signal<Publicacion[]>([]);

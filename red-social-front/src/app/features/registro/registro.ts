@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import {
     AbstractControl,
@@ -8,6 +9,9 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth';
+import { LIMITE_IMAGEN_PERFIL_MB } from '../../core/constantes';
+import { mensajeDeError } from '../../core/errores';
+import { validarImagen } from '../../core/validar-imagen';
 
 // Validador del grupo: la contraseña y su repetición tienen que ser iguales
 function contrasenasIguales(grupo: AbstractControl): ValidationErrors | null {
@@ -77,16 +81,10 @@ export class Registro {
             return;
         }
 
-        // que sea una imagen
-        if (!archivo.type.startsWith('image/')) {
-            this.errorArchivo.set('El archivo debe ser una imagen.');
-            input.value = '';
-            return;
-        }
-
-        // que pese menos de 2 MB
-        if (archivo.size > 2 * 1024 * 1024) {
-            this.errorArchivo.set('La imagen no puede pesar más de 2 MB.');
+        // que sea una imagen y no pese más del límite (core/validar-imagen.ts)
+        const errorImagen = validarImagen(archivo, LIMITE_IMAGEN_PERFIL_MB);
+        if (errorImagen) {
+            this.errorArchivo.set(errorImagen);
             input.value = '';
             return;
         }
@@ -123,13 +121,9 @@ export class Registro {
             next: () => {
                 this.router.navigate(['/login']);
             },
-            error: (err) => {
+            error: (err: HttpErrorResponse) => {
                 this.cargando.set(false);
-                this.error.set(
-                    err.status === 0
-                        ? 'No se pudo conectar con el servidor.'
-                        : (err.error?.message ?? 'Ocurrió un error. Probá de nuevo.'),
-                );
+                this.error.set(mensajeDeError(err));
             },
         });
     }

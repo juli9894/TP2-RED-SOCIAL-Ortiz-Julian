@@ -1,7 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, output, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LIMITE_IMAGEN_PUBLICACION_MB } from '../../../core/constantes';
+import { mensajeDeError } from '../../../core/errores';
 import { PublicacionesApi } from '../../../core/publicaciones-api';
+import { validarImagen } from '../../../core/validar-imagen';
 
 @Component({
     selector: 'app-nueva-publicacion',
@@ -40,13 +43,10 @@ export class NuevaPublicacion {
         this.limpiarArchivo();
         if (!elegido) return;
 
-        if (!elegido.type.startsWith('image/')) {
-            this.errorArchivo.set('El archivo debe ser una imagen');
-            entrada.value = '';
-            return;
-        }
-        if (elegido.size > 5 * 1024 * 1024) {
-            this.errorArchivo.set('La imagen no puede superar los 5 MB');
+        // que sea una imagen y no pese más del límite (core/validar-imagen.ts)
+        const errorImagen = validarImagen(elegido, LIMITE_IMAGEN_PUBLICACION_MB);
+        if (errorImagen) {
+            this.errorArchivo.set(errorImagen);
             entrada.value = '';
             return;
         }
@@ -93,12 +93,7 @@ export class NuevaPublicacion {
                 this.publicada.emit();
             },
             error: (err: HttpErrorResponse) => {
-                const mensaje = err.error?.message;
-                this.error.set(
-                    Array.isArray(mensaje)
-                        ? mensaje.join('. ')
-                        : (mensaje ?? 'No pudimos publicar'),
-                );
+                this.error.set(mensajeDeError(err, 'No pudimos publicar'));
                 this.enviando.set(false);
             },
         });

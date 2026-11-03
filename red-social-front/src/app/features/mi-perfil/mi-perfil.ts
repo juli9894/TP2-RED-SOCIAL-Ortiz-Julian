@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Auth } from '../../core/auth';
+import { PUBLICACIONES_EN_MI_PERFIL } from '../../core/constantes';
 import { PublicacionesApi } from '../../core/publicaciones-api';
 import type { Publicacion } from '../../core/models/publicacion.model';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
@@ -31,8 +32,8 @@ export class MiPerfil implements OnInit {
         }
 
         // Paso 2: mismo GET /publicaciones del CICLO LISTAR, pero filtrado por mi _id.
-        // Mis últimas 3 (el orden por defecto ya es "más recientes primero")
-        this.api.listar({ usuario: yo._id, limit: 3 }).subscribe({
+        // Mis últimas publicaciones (cantidad en core/constantes.ts; el orden por defecto ya es "más recientes primero")
+        this.api.listar({ usuario: yo._id, limit: PUBLICACIONES_EN_MI_PERFIL }).subscribe({
             // [paso 6/6] Llegaron mis publicaciones (mi-perfil.html las dibuja en modo solo lectura)
             next: (lista) => {
                 this.publicaciones.set(lista);

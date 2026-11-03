@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth';
+import { mensajeDeError } from '../../core/errores';
 
 @Component({
     selector: 'app-login',
@@ -44,13 +46,9 @@ export class Login {
             next: () => {
                 this.router.navigate(['/publicaciones']);
             },
-            error: (err) => {
+            error: (err: HttpErrorResponse) => {
                 this.cargando.set(false);
-                this.error.set(
-                    err.status === 0
-                        ? 'No se pudo conectar con el servidor.'
-                        : (err.error?.message ?? 'Ocurrió un error. Probá de nuevo.'),
-                );
+                this.error.set(mensajeDeError(err));
             },
         });
     }

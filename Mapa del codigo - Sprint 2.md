@@ -12,6 +12,9 @@ Rutas: `FRONT` = `red-social-front/src/app/` · `BACK` = `red-social-back/src/`
 | Qué busco | Dónde está |
 |---|---|
 | URL del back (local / producción) | FRONT `core/api.ts` |
+| Valores fijos (límites de imagen, publicaciones por página) | FRONT `core/constantes.ts` · BACK `common/constantes.ts` |
+| Texto del error que ve el usuario | FRONT `core/errores.ts` → `mensajeDeError()` |
+| Validación de imagen (¿es imagen? ¿pesa poco?) en el front | FRONT `core/validar-imagen.ts` |
 | Forma de los datos (interfaces) | FRONT `core/models/usuario.model.ts`, `core/models/publicacion.model.ts` |
 | Sesión (login, logout, token, usuario guardado) | FRONT `core/auth.ts` |
 | Llamadas HTTP de publicaciones | FRONT `core/publicaciones-api.ts` |
