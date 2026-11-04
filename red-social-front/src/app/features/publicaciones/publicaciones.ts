@@ -78,8 +78,8 @@ export class Publicaciones implements OnInit {
         this.aviso.set('');
 
         const pedido = cambio.dar
-            ? this.api.darMeGusta(cambio.id)
-            : this.api.quitarMeGusta(cambio.id);
+            ? this.api.darMeGusta(cambio.id)//post
+            : this.api.quitarMeGusta(cambio.id);//delete
 
         pedido.subscribe({
             // [paso 7/7] El back devolvió los me gusta nuevos: actualizo solo esa publicación
@@ -91,7 +91,7 @@ export class Publicaciones implements OnInit {
                                   ...p,
                                   meGusta: respuesta.meGusta,
                                   cantidadMeGusta: respuesta.cantidadMeGusta,
-                              }
+                              }//solo cambia meGusta y cantidadMeGusta, el resto queda igual
                             : p,
                     ),
                 );
@@ -102,7 +102,7 @@ export class Publicaciones implements OnInit {
 
     // ─── CICLO ELIMINAR ─────────────────────────────────────────────
 
-    // [CICLO ELIMINAR · paso 2/8] Lo llama la tarjeta al tocar el tacho: guarda el id y abre el modal
+    // [CICLO ELIMINAR · paso 2/8] 
     pedirEliminar(id: string) {
         this.idPorEliminar.set(id);
     }
@@ -112,7 +112,7 @@ export class Publicaciones implements OnInit {
         this.idPorEliminar.set(null);
     }
 
-    // [paso 3/8] "Eliminar" del modal: cierra la ventana y recién ahora borra
+    // [paso 3/8] 
     confirmarEliminar() {
         const id = this.idPorEliminar();
         if (!id) return;
@@ -120,14 +120,14 @@ export class Publicaciones implements OnInit {
         this.eliminarPublicacion(id);
     }
 
-    // [paso 4/8] Envía el DELETE al back
+    // [paso 4/8] 
     eliminarPublicacion(id: string) {
         this.aviso.set('');
 
         this.api.eliminar(id).subscribe({
-            // [paso 8/8] Salió bien: volver a pedir la lista de la página actual
+            // [paso 8/8]
             next: () => this.cargar(),
-            // Si falló (por ejemplo 403), mostrar el aviso
+
             error: () => this.aviso.set('No pudimos eliminar la publicación'),
         });
     }

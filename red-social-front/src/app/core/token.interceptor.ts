@@ -5,10 +5,9 @@ import { Auth } from './auth';
 
 // [CICLO SESIÓN] Se ejecuta antes de CADA petición HTTP (registrado en app.config.ts).
 export const tokenInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
-    // 1. Obtengo el token del localStorage
     const token = inject(Auth).obtenerToken();
 
-    // 2. Si no hay token o la URL no es de nuestro back, la dejo pasar sin tocarla
+    // 2.Registro y Login, o peticiones a otros dominios, no necesitan el token
     if (!token || !peticion.url.startsWith(API_URL)) {
         return siguiente(peticion);
     }

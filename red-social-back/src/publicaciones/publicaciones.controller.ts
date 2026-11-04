@@ -48,7 +48,7 @@ export class PublicacionesController {
         return this.publicacionesService.listar(filtros);
     }
 
-    // [CICLO ELIMINAR · paso 6/8] DELETE /publicaciones/:id → baja lógica (autor o administrador)
+    // [CICLO ELIMINAR · paso 6/8] 
     @UseGuards(AuthGuard)
     @Delete(':id')
     eliminar(@Param('id') id: string, @Req() pedido: PedidoAutenticado) {

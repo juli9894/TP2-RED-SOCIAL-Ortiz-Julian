@@ -94,7 +94,6 @@ export class PublicacionesService {
             throw new ForbiddenException('No podés eliminar esta publicación');
         }
 
-        // Baja lógica: no se borra de la base, se marca como eliminada
         publicacion.eliminada = true;
         await publicacion.save();
         return { mensaje: 'Publicación eliminada' };
@@ -107,14 +106,13 @@ export class PublicacionesService {
         this.validarId(id);
         const autor = new Types.ObjectId(usuarioId);
 
-        // 1. Una sola orden: busca (que no tenga ya mi me gusta) y modifica
         const publicacion = await this.publicacionModel.findOneAndUpdate(
-            { _id: id, eliminada: false, meGusta: { $ne: autor } },
-            { $addToSet: { meGusta: autor }, $inc: { cantidadMeGusta: 1 } },
-            { new: true }, // 2. devolver la publicación ya modificada
+            { _id: id, eliminada: false, meGusta: { $ne: autor } },//filtro
+            { $addToSet: { meGusta: autor }, $inc: { cantidadMeGusta: 1 } },//instruccion actualizacion
+            { new: true }, // opcion:documento actualizado como resultado
         );
 
-        // 3. Si no encontró nada: 404 si no existe, 409 si ya le había dado me gusta
+        // Si no encontró nada: 404 si no existe, 409 si ya le había dado me gusta
         if (!publicacion) {
             throw await this.errorMeGusta(id, 'Ya le diste me gusta');
         }
@@ -141,15 +139,13 @@ export class PublicacionesService {
 
     // ─── AYUDANTES (los usan los métodos de arriba) ─────────────────
 
-    // Si el id no tiene forma de id de Mongo, cortamos con 400
+    // Si el id no tiene forma de id de Mongo, corta con 400
     private validarId(id: string) {
         if (!Types.ObjectId.isValid(id)) {
             throw new BadRequestException('El id no es válido');
         }
     }
 
-    // Se usa cuando el findOneAndUpdate no encontró nada.
-    // Averigua por qué y devuelve el error que corresponde (404 o 409)
     private async errorMeGusta(id: string, mensajeConflicto: string) {
         const existe = await this.publicacionModel.exists({
             _id: id,

@@ -38,6 +38,6 @@ export class AuthGuard implements CanActivate {
             throw new UnauthorizedException('Token inválido');
         }
 
-        return true;
+        return true;//abre la puerta del controlador y pedido.usuario ya tiene los datos del usuario autenticado
     }
 }
