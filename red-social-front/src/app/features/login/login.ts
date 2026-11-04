@@ -30,7 +30,7 @@ export class Login {
         return control.invalid && control.touched;
     }
 
-    // [CICLO LOGIN · paso 1/6] Lo llama el (ngSubmit) del formulario de login.html
+    // [CICLO LOGIN · paso 1/6] 
     protected enviar() {
         if (this.formulario.invalid) {
             this.formulario.markAllAsTouched();
@@ -40,9 +40,9 @@ export class Login {
         this.error.set('');
         this.cargando.set(true);
 
-        // Paso 2: this.auth.login() (core/auth.ts) prepara el POST; el subscribe lo envía
+        //json
         this.auth.login(this.formulario.getRawValue()).subscribe({
-            // [paso 6/6] Llegó la respuesta (auth.ts ya guardó la sesión): vamos a /publicaciones
+            // [paso 6/6] 
             next: () => {
                 this.router.navigate(['/publicaciones']);
             },

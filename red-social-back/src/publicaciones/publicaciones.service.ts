@@ -49,13 +49,10 @@ export class PublicacionesService {
 
     // [CICLO LISTAR · paso 5/7]
     async listar(filtros: ListarPublicacionesDto) {
-        // valores por defecto si no vienen en el dto
+        // valores por defecto
         const { orden = 'fecha', usuario, offset = 0, limit = 10 } = filtros;
-
-        // buscar publicaciones que no estén eliminadas
         const consulta: Record<string, unknown> = { eliminada: false };
 
-        // filtro por usuario si viene en el dto (así lo usa Mi perfil)
         if (usuario) {
             consulta.autor = new Types.ObjectId(usuario);
         }

@@ -15,22 +15,18 @@ import { ModalConfirmacion } from '../../shared/modal-confirmacion/modal-confirm
 export class Publicaciones implements OnInit {
     private api = inject(PublicacionesApi);
 
-    // Cuántas publicaciones se muestran por página (valor en core/constantes.ts)
     private readonly porPagina = PUBLICACIONES_POR_PAGINA;
-
     // ESTADO de la pantalla
     readonly publicaciones = signal<Publicacion[]>([]);
     readonly cargando = signal(true);
     readonly error = signal('');
     readonly aviso = signal('');
-    readonly idPorEliminar = signal<string | null>(null); // id esperando confirmación en el modal
-
+    readonly idPorEliminar = signal<string | null>(null); 
     // ORDEN elegido, PÁGINA actual (empieza en 0) y si existe una página siguiente
     readonly orden = signal<'fecha' | 'meGusta'>('fecha');
     readonly pagina = signal(0);
     readonly hayMas = signal(false);
 
-    // Angular lo ejecuta una vez, al crear la pantalla
     ngOnInit() {
         this.cargar();
     }
@@ -45,10 +41,8 @@ export class Publicaciones implements OnInit {
         this.api
             .listar({
                 orden: this.orden(),
-                // offset = cuántas saltear. Página 0 → 0, página 1 → 6, página 2 → 12...
-                offset: this.pagina() * this.porPagina,
-                // Pedimos UNA DE MÁS para saber si hay página siguiente
-                limit: this.porPagina + 1,
+                offset: this.pagina() * this.porPagina, //cuantas saltar
+                limit: this.porPagina + 1,//Para saber si hay una mas
             })
             .subscribe({
                 // [paso 6/7] Llegó la lista

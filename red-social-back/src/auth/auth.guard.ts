@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     constructor(private configService: ConfigService) {}
 
     canActivate(context: ExecutionContext): boolean {
-        const pedido = context.switchToHttp().getRequest<PedidoAutenticado>();
+        const pedido = context.switchToHttp().getRequest<PedidoAutenticado>();//obtiene req de HTTP
 
         const cabecera = pedido.headers['authorization'];
         const [tipo, token] = cabecera?.split(' ') ?? [];
@@ -26,14 +26,14 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
-            const payload = jwt.verify(
+            const payload = jwt.verify( //lanza error si el token es inválido o expiró, cae en el catch
                 token,
                 this.configService.getOrThrow<string>('JWT_SECRET'),
             );
             if (typeof payload === 'string') {
                 throw new Error('Token inválido');
             }
-            pedido.usuario = payload as PayloadToken;
+            pedido.usuario = payload as PayloadToken;//forma de objeto o string, por eso se hace el cast
         } catch {
             throw new UnauthorizedException('Token inválido');
         }

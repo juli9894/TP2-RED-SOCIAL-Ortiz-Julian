@@ -4,7 +4,6 @@ import { API_URL } from './api';
 import { Auth } from './auth';
 
 // [CICLO SESIÓN] Se ejecuta antes de CADA petición HTTP (registrado en app.config.ts).
-// Si hay token y la URL es del back, agrega la cabecera Authorization: Bearer <token>
 export const tokenInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
     // 1. Obtengo el token del localStorage
     const token = inject(Auth).obtenerToken();

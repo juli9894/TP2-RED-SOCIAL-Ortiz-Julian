@@ -21,47 +21,42 @@ export class AuthService {
         let imagenPerfil: string | undefined;
 
         if (archivo) {
-            // Sube la foto a Cloudinary (valida que sea imagen) y devuelve la URL
             imagenPerfil = await this.cloudinaryService.subirImagen(archivo);
         }
 
-        // Paso 5: crea el usuario en la base con los datos del formulario + la URL de la foto
         const usuario = await this.usuariosService.crear({ ...datos, imagenPerfil });
 
-        // Documento de mongoose → objeto plano, sin la contraseña (no se la mandamos al front)
         const { contrasena, ...sinContrasena } = usuario.toObject();
-        return sinContrasena; // vuelve a auth.controller.ts registro()
+        //auth.controller.ts registro()
+        return sinContrasena;
     }
 
     // [CICLO LOGIN · paso 4/6]
     async login(datos: LoginDto) {
-        // Paso 5: busca por nombre de usuario o por correo
         const usuario = await this.usuariosService.buscarPorUsuarioOCorreo(
             datos.usuarioOCorreo,
         );
 
-        // Compara la contraseña escrita con el hash guardado
         const contrasenaValida = usuario
             ? await bcrypt.compare(datos.contrasena, usuario.contrasena)
             : false;
 
-        // Mismo mensaje si falla el usuario o la contraseña (no revela cuál de los dos)
         if (!usuario || !contrasenaValida) {
             throw new UnauthorizedException('Credenciales incorrectas');
         }
 
         const { contrasena, ...sinContrasena } = usuario.toObject();
 
-        // El token lleva id, usuario y perfil (ver PayloadToken)
+        // El token lleva id, usuario y perfil, con firma jwt
         const token = jwt.sign(
             {
                 id: usuario._id.toString(),
                 usuario: usuario.usuario,
                 perfil: usuario.perfil,
             },
-            this.configService.getOrThrow<string>('JWT_SECRET'),
+            this.configService.getOrThrow<string>('JWT_SECRET')
         );
 
-        return { token, usuario: sinContrasena }; // vuelve a auth.ts login() en el front
+        return { token, usuario: sinContrasena }; // auth.ts login() front
     }
 }

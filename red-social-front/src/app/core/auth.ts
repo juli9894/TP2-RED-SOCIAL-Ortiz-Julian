@@ -13,8 +13,7 @@ export class Auth {
     // null = invitado; con valor = hay alguien logueado
     readonly usuarioActual = signal<UsuarioSesion | null>(this.leerGuardado());
 
-    // [CICLO LOGIN · paso 2/6] Prepara el POST a /auth/login. No se envía hasta el subscribe de login.ts
-    // [CICLO LOGIN · paso 6/6] Cuando el back responde, el tap guarda usuario y token (signal + localStorage)
+    // [CICLO LOGIN · paso 2/6] prepara el POST a /auth/login y le agrega el pipe tap() para guardar la sesión (usuario + token) en localStorage.
     login(datos: DatosLogin) {
         return this.http.post<RespuestaLogin>(`${API_URL}/auth/login`, datos).pipe(
             tap((respuesta) => {

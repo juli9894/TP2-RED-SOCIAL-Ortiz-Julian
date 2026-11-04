@@ -28,7 +28,7 @@ export class AuthController {
         @Body() datos: CrearUsuarioDto, // lee req.body (validado por el ValidationPipe de main.ts)
         @UploadedFile() archivo?: ArchivoSubido, // lee req.file
     ) {
-        // Devuelve el usuario creado (sin contraseña) a auth.ts → registro.ts
+        // Usuario creado (sin contraseña) a auth.ts → registro.ts
         return this.authService.registro(datos, archivo);
     }
 

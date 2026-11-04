@@ -13,7 +13,6 @@ export class UsuariosService {
 
     // [CICLO REGISTRO · paso 5/6]
     async crear(datos: CrearUsuarioDto & { imagenPerfil?: string }) {
-        // 409 si el correo ya existe
         const correoExistente = await this.usuarioModel.findOne({
             correo: datos.correo.toLowerCase(),
         });
@@ -21,7 +20,6 @@ export class UsuariosService {
             throw new ConflictException('El correo ya está registrado');
         }
 
-        // 409 si el nombre de usuario ya existe
         const usuarioExistente = await this.usuarioModel.findOne({
             usuario: datos.usuario.trim().toLowerCase(),
         });
@@ -29,10 +27,9 @@ export class UsuariosService {
             throw new ConflictException('El nombre de usuario ya está en uso');
         }
 
-        // La contraseña se guarda hasheada, nunca en texto plano
         const contrasenaHasheada = await bcrypt.hash(datos.contrasena, 10);
 
-        // Devuelve el documento a registro() de auth.service.ts
+        // registro() de auth.service.ts
         return this.usuarioModel.create({
             ...datos,
             contrasena: contrasenaHasheada,

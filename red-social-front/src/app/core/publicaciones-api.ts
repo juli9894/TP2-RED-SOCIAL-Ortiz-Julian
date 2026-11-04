@@ -7,23 +7,22 @@ import type {
     RespuestaMeGusta,
 } from './models/publicacion.model';
 
-// Todas las llamadas HTTP de publicaciones están acá. Cada método PREPARA el pedido
-// y lo devuelve; no se envía hasta que quien lo llama hace subscribe.
+// Peticiones al back relacionadas con publicaciones (listar, dar/quitar me gusta, crear, eliminar).
 // El token lo agrega solo token.interceptor.ts.
 @Injectable({ providedIn: 'root' })
 export class PublicacionesApi {
     private http = inject(HttpClient);
 
-    // [CICLO LISTAR · paso 2/7] GET /publicaciones (también lo usa CICLO MI PERFIL)
+    // [CICLO LISTAR · paso 2/7] 
     listar(filtros: FiltrosPublicaciones = {}) {
-        // 1. Armar el "?orden=...&limit=..." solo con los filtros que tengan valor
+
         let params = new HttpParams();
         for (const [clave, valor] of Object.entries(filtros)) {
             if (valor !== undefined) {
                 params = params.set(clave, String(valor));
             }
         }
-        // 2. Prepara el GET (no lo envía hasta que alguien haga subscribe)
+
         return this.http.get<Publicacion[]>(`${API_URL}/publicaciones`, { params });
     }
 

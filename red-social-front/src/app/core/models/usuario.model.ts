@@ -1,13 +1,10 @@
-// MODELOS DE USUARIO Y SESIÓN
-// Solo describen la forma de los datos que llegan del back. No tienen lógica.
-
-// Datos que se mandan al hacer login (los escribe el usuario en el formulario)
+// Datos que manda usuario en login
 export interface DatosLogin {
     usuarioOCorreo: string;
     contrasena: string;
 }
 
-// Usuario tal como lo devuelve el back (sin contraseña). Es lo que guardamos en la sesión
+// Usuario como lo devuelve el back (sin contraseña)
 export interface UsuarioSesion {
     _id: string;
     nombre: string;
@@ -20,7 +17,6 @@ export interface UsuarioSesion {
     imagenPerfil?: string;
 }
 
-// Respuesta completa de POST /auth/login
 export interface RespuestaLogin {
     token: string;
     usuario: UsuarioSesion;

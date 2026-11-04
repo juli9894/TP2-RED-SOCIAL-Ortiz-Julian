@@ -2,9 +2,9 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Auth } from './auth';
 
-// [CICLO SESIÓN] Guards de ruta (se usan en app.routes.ts)
+// [CICLO SESIÓN]
 
-// Deja pasar solo si hay alguien logueado; si no, manda a /login
+// Solo si hay sesion
 export const sesionGuard: CanActivateFn = () => {
     const auth = inject(Auth);
     const router = inject(Router);
@@ -12,7 +12,7 @@ export const sesionGuard: CanActivateFn = () => {
     return auth.usuarioActual() ? true : router.createUrlTree(['/login']);
 };
 
-// Deja pasar solo si NO hay sesión (login y registro); si ya hay, manda a /publicaciones
+// Solo si NO hay sesion
 export const invitadoGuard: CanActivateFn = () => {
     const auth = inject(Auth);
     const router = inject(Router);
