@@ -37,7 +37,6 @@ export class PublicacionesController {
         @Req() pedido: PedidoAutenticado,
         @UploadedFile() archivo?: ArchivoSubido,
     ) {
-        // El guard ya verificó el token, así que pedido.usuario existe
         return this.publicacionesService.crear(datos, pedido.usuario!.id, archivo);
     }
 

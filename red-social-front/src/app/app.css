@@ -1,6 +1,10 @@
+/* El conjunto menú lateral + contenido se centra como un bloque (como Facebook).
+   En pantallas grandes queda aire parejo a los dos lados en vez de un hueco a la izquierda. */
 .layout {
     display: flex;
+    max-width: 88rem;
     min-height: calc(100vh - 3.5rem);
+    margin: 0 auto;
 }
 
 .contenido {

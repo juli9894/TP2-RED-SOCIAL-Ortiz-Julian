@@ -19,30 +19,33 @@ export class NuevaPublicacion {
     // Acceso al <input type="file" #entradaArchivo> del HTML
     private entradaArchivo = viewChild<ElementRef<HTMLInputElement>>('entradaArchivo');
 
-    // Aviso hacia el padre (publicaciones.html): "ya publiqué, recargá la lista"
     readonly publicada = output<void>();
 
-    // Formulario (el pattern evita textos que sean solo espacios)
+    // true = el formulario está desplegado; false = solo se ve la barra "Contá tu problema"
+    readonly abierto = signal(false);
+
     readonly formulario = this.fb.nonNullable.group({
-        titulo: ['', [Validators.required, Validators.pattern(/\S/)]],
+        titulo: ['', [Validators.required, Validators.pattern(/\S/)]], //textos con al menos un caracter que no sea espacio
         mensaje: ['', [Validators.required, Validators.pattern(/\S/)]],
     });
 
-    // El archivo elegido (File) y cosas de la pantalla
     private archivo: File | null = null;
     readonly vistaPrevia = signal<string | null>(null);
     readonly errorArchivo = signal('');
     readonly enviando = signal(false);
     readonly error = signal('');
 
-    // Lo llama el (change) del campo de archivo: valida y arma la vista previa
+    // Lo llaman la barra de arriba y el botón Cancelar de nueva-publicacion.html
+    alternar() {
+        this.abierto.update((valor) => !valor);
+    }
+
     seleccionarArchivo(evento: Event) {
         const entrada = evento.target as HTMLInputElement;
         const elegido = entrada.files?.[0];
 
         this.limpiarArchivo();
         if (!elegido) return;
-
         // que sea una imagen y no pese más del límite (core/validar-imagen.ts)
         const errorImagen = validarImagen(elegido, LIMITE_IMAGEN_PUBLICACION_MB);
         if (errorImagen) {
@@ -82,7 +85,7 @@ export class NuevaPublicacion {
             datos.append('imagen', this.archivo);
         }
 
-        // Paso 2: this.api.crear() (core/publicaciones-api.ts) prepara el POST; el subscribe lo envía
+        // Paso 2: this.api.crear() 
         this.api.crear(datos).subscribe({
             // [paso 6/7] El back guardó la publicación: limpio el formulario y aviso al padre,
             // que ejecuta irAPagina(0) y vuelve a cargar la lista [paso 7/7]
@@ -90,7 +93,8 @@ export class NuevaPublicacion {
                 this.formulario.reset();
                 this.limpiarArchivo();
                 this.enviando.set(false);
-                this.publicada.emit();
+                this.abierto.set(false); // al publicar, el formulario se pliega solo
+                this.publicada.emit();//dispara el output, que el padre escucha con (publicada)
             },
             error: (err: HttpErrorResponse) => {
                 this.error.set(mensajeDeError(err, 'No pudimos publicar'));

@@ -65,7 +65,7 @@ export class Publicaciones implements OnInit {
         this.irAPagina(0);
     }
 
-    // Lo llaman Anterior, Siguiente y el formulario al publicar [CICLO PUBLICAR · paso 7/7]
+    // [CICLO PUBLICAR · paso 7/7]
     irAPagina(pagina: number) {
         this.pagina.set(pagina);
         this.cargar();

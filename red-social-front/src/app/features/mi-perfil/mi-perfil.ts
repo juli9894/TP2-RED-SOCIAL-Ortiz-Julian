@@ -32,7 +32,6 @@ export class MiPerfil implements OnInit {
         }
 
         // Paso 2: mismo GET /publicaciones del CICLO LISTAR, pero filtrado por mi _id.
-        // Mis últimas publicaciones (cantidad en core/constantes.ts; el orden por defecto ya es "más recientes primero")
         this.api.listar({ usuario: yo._id, limit: PUBLICACIONES_EN_MI_PERFIL }).subscribe({
             // [paso 6/6] Llegaron mis publicaciones (mi-perfil.html las dibuja en modo solo lectura)
             next: (lista) => {

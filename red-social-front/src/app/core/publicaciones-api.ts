@@ -16,7 +16,7 @@ export class PublicacionesApi {
     // [CICLO LISTAR · paso 2/7] 
     listar(filtros: FiltrosPublicaciones = {}) {
 
-        let params = new HttpParams();
+        let params = new HttpParams();//codifica los filtros en la URL: ?orden=fecha&usuario=123&offset=0&limit=10
         for (const [clave, valor] of Object.entries(filtros)) {
             if (valor !== undefined) {
                 params = params.set(clave, String(valor));
@@ -41,7 +41,7 @@ export class PublicacionesApi {
         );
     }
 
-    // [CICLO PUBLICAR · paso 2/7] POST /publicaciones con el paquete (texto + imagen)
+    // [CICLO PUBLICAR · paso 2/7] 
     crear(datos: FormData) {
         return this.http.post<{ _id: string }>(`${API_URL}/publicaciones`, datos);
     }

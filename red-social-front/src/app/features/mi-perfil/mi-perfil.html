@@ -1,4 +1,4 @@
-<section>
+<section class="pagina">
     <h1>Mi perfil</h1>
 
     @if (usuario(); as yo) {
@@ -42,9 +42,11 @@
                 <p>Todavía no publicaste nada.</p>
             </div>
         } @else {
-            @for (publicacion of publicaciones(); track publicacion._id) {
-                <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
-            }
+            <div class="grilla-tarjetas">
+                @for (publicacion of publicaciones(); track publicacion._id) {
+                    <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
+                }
+            </div>
         }
     }
 </section>

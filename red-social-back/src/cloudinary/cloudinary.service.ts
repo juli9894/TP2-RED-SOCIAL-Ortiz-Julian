@@ -40,14 +40,14 @@ export class CloudinaryService {
     private subir(archivo: ArchivoSubido, opciones: UploadApiOptions): Promise<string> {
         this.validarImagen(archivo);
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => { //callback porque cloudinary no tiene promesas
             const flujo = cloudinary.uploader.upload_stream(opciones, (error, resultado) => {
                 if (error || !resultado) {
                     return reject(error ?? new Error('No se pudo subir la imagen'));
                 }
-                resolve(resultado.secure_url);
+                resolve(resultado.secure_url);//retorna la URL pública de la imagen
             });
-            flujo.end(archivo.buffer);
+            flujo.end(archivo.buffer);//sube la imagen desde el buffer del archivo
         });
     }
 }

@@ -1,59 +1,89 @@
+/* Cada publicación es una tarjeta que crece según su contenido (con o sin imagen) */
 .tarjeta {
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem 1.1rem;
 }
 
 .tarjeta-autor {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    gap: 0.6rem;
+}
+
+.tarjeta-autor-datos {
+    min-width: 0;
+    line-height: 1.2;
 }
 
 .tarjeta-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .tarjeta-avatar-icono {
-    font-size: 40px;
+    font-size: 36px;
     line-height: 1;
+    color: var(--rs-texto-suave);
 }
 
 .tarjeta-fecha {
     display: block;
-    opacity: 0.7;
+    color: var(--rs-texto-suave);
 }
 
+.tarjeta-titulo {
+    margin: 0.15rem 0 0;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+
+.tarjeta-mensaje {
+    margin: 0;
+    color: var(--rs-texto-suave);
+    overflow-wrap: anywhere;
+    white-space: pre-line; /* respeta los saltos de línea que escribió el usuario */
+}
+
+/* La imagen ocupa el ancho de la tarjeta y se ve entera (sin recortar); si es muy alta, se limita */
 .tarjeta-imagen {
     display: block;
     width: 100%;
-    max-width: 600px;
-    height: 360px;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 0.5rem;
-    margin-bottom: 0.75rem;
+    max-height: 30rem;
+    object-fit: contain;
+    background-color: #1a1a18;
+    border-radius: var(--rs-radio);
 }
 
 .tarjeta-pie {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--rs-borde);
+    color: var(--rs-texto-suave);
+    font-size: 0.9rem;
 }
 
-.btn-corazon {
+.btn-corazon,
+.btn-eliminar {
     background: none;
     border: 0;
     padding: 0;
     color: var(--rs-texto-suave);
-    font-size: 1.25rem;
     line-height: 1;
     cursor: pointer;
 }
 
-.btn-corazon:hover {
+.btn-corazon {
+    font-size: 1.25rem;
+}
+
+.btn-corazon:hover:not(:disabled) {
     color: var(--rs-accion-clara);
 }
 
@@ -61,21 +91,22 @@
     color: var(--rs-accion);
 }
 
-.btn-eliminar {
-    margin-left: auto; /* empuja el tacho hacia la derecha del pie */
-    background: none;
-    border: 0;
-    padding: 0;
-    color: var(--rs-texto-suave);
-    font-size: 1.15rem;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.btn-corazon:hover:not(:disabled) {
-    color: var(--rs-accion-clara);
-}
-
 .btn-corazon:disabled {
     cursor: default;
+}
+
+.btn-eliminar {
+    margin-left: auto; /* empuja el tacho hacia la derecha del pie */
+    font-size: 1.15rem;
+}
+
+.btn-eliminar:hover {
+    color: #f87171;
+}
+
+.btn-corazon:focus-visible,
+.btn-eliminar:focus-visible {
+    outline: 2px solid var(--rs-accion);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
 }

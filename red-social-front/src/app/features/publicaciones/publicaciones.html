@@ -1,10 +1,22 @@
-<section>
-    <h1>Publicaciones</h1>
+<section class="pagina-feed">
+<div class="feed-principal">
+    <!-- Encabezado: explica de un vistazo de qué trata la app -->
+    <header class="portada">
+        <div class="portada-texto">
+            <h1>Mostrá tu problema.<br />Alguien te ayuda a resolverlo.</h1>
+            <p>
+                Publicá lo que no te sale y la comunidad te da una mano.
+                ¿Sabés cómo se arregla algo? Entrá a una publicación y ayudá.
+            </p>
+        </div>
+        <img class="portada-personaje" src="personaje.png" alt="" />
+    </header>
 
     <app-nueva-publicacion (publicada)="irAPagina(0)" />
 
     <div class="barra-orden">
-        <span>Ordenar por:</span>
+        <h2 class="barra-titulo">Problemas publicados</h2>
+        <span class="barra-etiqueta">Ordenar por:</span>
         <div class="btn-group" role="group" aria-label="Ordenar publicaciones">
             <button
                 type="button"
@@ -37,17 +49,19 @@
         <div class="alert alert-danger">{{ error() }}</div>
     } @else if (publicaciones().length === 0) {
         <div class="estado-vacio">
-            <i class="bi bi-chat-square-text" aria-hidden="true"></i>
-            <p>Todavía no hay publicaciones.</p>
+            <i class="bi bi-lightbulb" aria-hidden="true"></i>
+            <p>Todavía nadie contó un problema. ¡Sé el primero!</p>
         </div>
     } @else {
-        @for (publicacion of publicaciones(); track publicacion._id) {
-            <app-tarjeta-publicacion
-                [publicacion]="publicacion"
-                (alternarMeGusta)="alternarMeGusta($event)"
-                (eliminar)="pedirEliminar($event)"
-            />
-        }
+        <div class="grilla-tarjetas">
+            @for (publicacion of publicaciones(); track publicacion._id) {
+                <app-tarjeta-publicacion
+                    [publicacion]="publicacion"
+                    (alternarMeGusta)="alternarMeGusta($event)"
+                    (eliminar)="pedirEliminar($event)"
+                />
+            }
+        </div>
     }
 
     @if (!cargando() && (pagina() > 0 || hayMas())) {
@@ -81,4 +95,35 @@
             (cancelar)="cancelarEliminar()"
         />
     }
+</div>
+
+<!-- Panel lateral: explica cómo se usa la app. Solo se ve en pantallas anchas -->
+<aside class="feed-lateral" aria-label="Cómo funciona TeResuelvo">
+    <section class="panel">
+        <h2 class="panel-titulo">Cómo funciona</h2>
+        <ol class="pasos">
+            <li>
+                <i class="bi bi-wrench-adjustable" aria-hidden="true"></i>
+                <div><strong>Contá tu problema</strong><span>Escribí qué te pasa y sumá una foto si podés.</span></div>
+            </li>
+            <li>
+                <i class="bi bi-people" aria-hidden="true"></i>
+                <div><strong>La comunidad te ayuda</strong><span>Otros usuarios ven tu publicación y te dan una mano.</span></div>
+            </li>
+            <li>
+                <i class="bi bi-lightbulb" aria-hidden="true"></i>
+                <div><strong>Problema resuelto</strong><span>¿Sabés la respuesta? Ayudá vos también.</span></div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="panel">
+        <h2 class="panel-titulo">Para que te ayuden más rápido</h2>
+        <ul class="consejos">
+            <li>Poné un título claro: qué es y qué falla.</li>
+            <li>Contá qué ya probaste.</li>
+            <li>Una foto vale más que mil palabras.</li>
+        </ul>
+    </section>
+</aside>
 </section>
