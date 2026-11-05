@@ -1,7 +1,7 @@
 /* ---------- Distribución: feed + panel lateral ---------- */
 .pagina-feed {
     display: grid;
-    grid-template-columns: minmax(0, 44rem) 19rem;
+    grid-template-columns: minmax(0, 52rem) 22rem;
     gap: 1.5rem;
     justify-content: center;
 }
@@ -84,9 +84,9 @@
 }
 
 /* Pantallas medianas y chicas: sin panel lateral, solo el feed */
-@media (max-width: 1279.98px) {
+@media (max-width: 1399.98px) {
     .pagina-feed {
-        grid-template-columns: minmax(0, 48rem);
+        grid-template-columns: minmax(0, 52rem);
     }
 
     .feed-lateral {
@@ -121,7 +121,7 @@
     height: 0.6rem;
     background: repeating-linear-gradient(
         -45deg,
-        #facc15 0 0.9rem,
+        var(--rs-accion) 0 0.9rem,
         #1a1208 0.9rem 1.8rem
     );
 }

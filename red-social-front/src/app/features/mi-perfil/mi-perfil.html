@@ -1,52 +1,86 @@
-<section class="pagina">
-    <h1>Mi perfil</h1>
-
+<section class="perfil-pagina">
     @if (usuario(); as yo) {
-        <article class="card perfil-datos mb-4">
-            <div class="perfil-cabecera">
-                @if (yo.imagenPerfil; as foto) {
-                    <img
-                        class="perfil-foto"
-                        [src]="foto"
-                        alt="Foto de perfil de {{ yo.usuario }}"
-                    />
-                } @else {
-                    <i class="bi bi-person-circle perfil-foto-icono" aria-hidden="true"></i>
-                }
-                <h2 class="h4 mb-0">{{ yo.nombre }} {{ yo.apellido }}</h2>
+        <div class="perfil-cuerpo">
+            <!-- Izquierda: cabecera con foto y nombre + últimas publicaciones -->
+            <div class="perfil-principal">
+                <!-- Cabecera: foto, nombre y rol -->
+                <header class="perfil-portada">
+                    <div class="perfil-identidad">
+                        <div class="perfil-marco">
+                            @if (yo.imagenPerfil; as foto) {
+                                <img
+                                    class="perfil-foto"
+                                    [src]="foto"
+                                    alt="Foto de perfil de {{ yo.usuario }}"
+                                />
+                            } @else {
+                                <i class="bi bi-person-circle perfil-foto-icono" aria-hidden="true"></i>
+                            }
+                        </div>
+
+                        <div class="perfil-texto">
+                            <h1>{{ yo.nombre }} {{ yo.apellido }}</h1>
+                            <p class="perfil-usuario">&#64;{{ yo.usuario }}</p>
+                        </div>
+
+                        <span class="perfil-rol">
+                            <i class="bi bi-person-workspace" aria-hidden="true"></i>
+                            <span class="text-capitalize">{{ yo.perfil }}</span>
+                        </span>
+                    </div>
+                </header>
+
+                <!-- Izquierda: últimas publicaciones -->
+                <div class="perfil-publicaciones">
+                    <h2 class="perfil-subtitulo">Mis últimas publicaciones</h2>
+
+                    @if (cargando()) {
+                        <p>Cargando...</p>
+                    } @else if (error()) {
+                        <div class="alert alert-danger">{{ error() }}</div>
+                    } @else if (publicaciones().length === 0) {
+                        <div class="estado-vacio">
+                            <i class="bi bi-lightbulb" aria-hidden="true"></i>
+                            <p>Todavía no publicaste nada.</p>
+                        </div>
+                    } @else {
+                        <div class="grilla-tarjetas">
+                            @for (publicacion of publicaciones(); track publicacion._id) {
+                                <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
+                            }
+                        </div>
+                    }
+                </div>
             </div>
 
-            <dl class="perfil-lista">
-                <dt>Usuario</dt>
-                <dd>{{ yo.usuario }}</dd>
-                <dt>Correo</dt>
-                <dd>{{ yo.correo }}</dd>
-                <dt>Fecha de nacimiento</dt>
-                <dd>{{ yo.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }}</dd>
-                <dt>Perfil</dt>
-                <dd class="text-capitalize">{{ yo.perfil }}</dd>
-                <dt>Descripción</dt>
-                <dd>{{ yo.descripcion }}</dd>
-            </dl>
-        </article>
+            <!-- Derecha: una sola tarjeta con "Sobre mí" y "Mis datos" -->
+            <aside class="perfil-lateral" aria-label="Datos del perfil">
+                <section class="panel">
+                    <h2 class="panel-titulo">Sobre mí</h2>
+                    <p class="perfil-descripcion">{{ yo.descripcion }}</p>
 
-        <h2 class="h4">Mis últimas publicaciones</h2>
+                    <hr class="panel-separador" />
 
-        @if (cargando()) {
-            <p>Cargando...</p>
-        } @else if (error()) {
-            <div class="alert alert-danger">{{ error() }}</div>
-        } @else if (publicaciones().length === 0) {
-            <div class="estado-vacio">
-                <i class="bi bi-chat-square-text" aria-hidden="true"></i>
-                <p>Todavía no publicaste nada.</p>
-            </div>
-        } @else {
-            <div class="grilla-tarjetas">
-                @for (publicacion of publicaciones(); track publicacion._id) {
-                    <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
-                }
-            </div>
-        }
+                    <h2 class="panel-titulo">Mis datos</h2>
+                    <ul class="datos">
+                        <li>
+                            <i class="bi bi-person-badge" aria-hidden="true"></i>
+                            <div><small>Usuario</small><span>&#64;{{ yo.usuario }}</span></div>
+                        </li>
+                        <li>
+                            <i class="bi bi-envelope" aria-hidden="true"></i>
+                            <div><small>Correo</small><span>{{ yo.correo }}</span></div>
+                        </li>
+                        <li>
+                            <i class="bi bi-cake2" aria-hidden="true"></i>
+                            <div>
+                                <small>Fecha de nacimiento</small>
+                                <span>{{ yo.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
     }
 </section>

@@ -166,9 +166,31 @@ a:hover {
 }
 
 .acceso-formulario .card {
+    --bs-card-bg: #34332f;
+    position: relative;
     max-width: 28rem;
     margin: 0 auto;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    border-color: rgba(249, 115, 22, 0.6);
+    /* sombra oscura para separarla del fondo + un leve resplandor naranja */
+    box-shadow:
+        0 1.5rem 4rem rgba(0, 0, 0, 0.65),
+        0 0 3rem rgba(249, 115, 22, 0.2);
+}
+
+
+
+/* Fondo de las pantallas de acceso: ocupa toda la ventana, detrás de todo.
+   La parte vacía de la imagen queda a la izquierda, donde van el logo y el lema. */
+.acceso-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    pointer-events: none;
 }
 
 /* En celular: una sola columna y la marca centrada */
@@ -188,7 +210,7 @@ a:hover {
 /* ---------- Columna central y lista de tarjetas ---------- */
 /* Columna angosta centrada (estilo Reddit): se lee cómoda y no queda vacío a los costados */
 .pagina {
-    max-width: 48rem;
+    max-width: 52rem;
     margin: 0 auto;
 }
 
@@ -197,4 +219,80 @@ a:hover {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+/* ---------- Recuadro de login y registro ---------- */
+/* Cabecera: ícono en círculo naranja + título y una línea de ayuda */
+.acceso-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.acceso-icono {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    background-color: var(--rs-accion);
+    border-radius: 50%;
+    color: #1a1208;
+    font-size: 1.5rem;
+    box-shadow: 0 0 1.25rem rgba(249, 115, 22, 0.35);
+}
+
+.acceso-cabecera h2 {
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.acceso-cabecera p {
+    margin: 0.25rem 0 0;
+    color: var(--rs-texto-suave);
+    font-size: 0.95rem;
+    line-height: 1.25;
+}
+
+/* Campos más cómodos y etiquetas más discretas */
+.acceso-formulario .form-label {
+    margin-bottom: 0.3rem;
+    color: var(--rs-texto-suave);
+    font-size: 0.9rem;
+}
+
+.acceso-formulario .form-control {
+    padding: 0.65rem 0.85rem;
+    background-color: #2a2926;
+}
+
+/* Botón principal más grande y con un leve brillo */
+.acceso-formulario .btn-accion {
+    padding: 0.7rem 1rem;
+    font-size: 1.05rem;
+    box-shadow: 0 0.5rem 1.25rem rgba(249, 115, 22, 0.3);
+}
+
+.acceso-formulario .btn-secundario {
+    padding: 0.6rem 1rem;
+}
+
+/* Separador con texto: ——— ¿Todavía no tenés cuenta? ——— */
+.acceso-o {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--rs-texto-suave);
+    font-size: 0.9rem;
+}
+
+.acceso-o::before,
+.acceso-o::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--rs-borde);
 }

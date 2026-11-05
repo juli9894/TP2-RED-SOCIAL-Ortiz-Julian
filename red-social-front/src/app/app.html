@@ -1,6 +1,8 @@
 @if (esAcceso()) {
     <router-outlet />
 } @else {
+    <!-- Fondo sutil: la misma red de íconos del login, en gris y bien oscura -->
+    <img class="fondo-app" src="fondo-app.webp" alt="" />
     <app-navbar />
     <div class="layout">
         <app-sidebar />

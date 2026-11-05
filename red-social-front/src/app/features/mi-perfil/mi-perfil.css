@@ -1,38 +1,198 @@
-.perfil-datos {
-    padding: 1.25rem;
+/* Mismo ancho total que /publicaciones: feed (52rem) + espacio (1.5rem) + panel (22rem) */
+.perfil-pagina {
+    max-width: calc(52rem + 1.5rem + 22rem);
+    margin: 0 auto;
 }
 
-.perfil-cabecera {
+/* ---------- Cabecera ---------- */
+.perfil-portada {
+    position: relative;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 9rem 50%, rgba(250, 204, 21, 0.1), transparent 14rem),
+        var(--rs-superficie);
+    border: 1px solid var(--rs-borde);
+    border-radius: var(--rs-radio);
+}
+
+/* Banda de obra, más fina y tenue que la de la portada de publicaciones */
+.perfil-portada::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0.35rem;
+    background: repeating-linear-gradient(-45deg, var(--rs-accion) 0 0.7rem, #1a1208 0.7rem 1.4rem);
+    opacity: 0.55;
+}
+
+.perfil-identidad {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+}
+
+.perfil-marco {
+    flex-shrink: 0;
+    line-height: 0;
 }
 
 .perfil-foto {
-    width: 96px;
-    height: 96px;
+    width: 7.5rem;
+    height: 7.5rem;
+    border: 3px solid var(--rs-accion);
     border-radius: 50%;
     object-fit: cover;
 }
 
 .perfil-foto-icono {
-    font-size: 96px;
+    font-size: 7.5rem;
     line-height: 1;
+    color: var(--rs-texto-suave);
 }
 
-.perfil-lista {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 0.5rem 1.25rem;
+.perfil-texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.perfil-texto h1 {
     margin: 0;
+    text-transform: capitalize; /* "juli ortiz" se muestra como "Juli Ortiz" (solo visual, no cambia el dato guardado) */
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1;
+    overflow-wrap: anywhere;
 }
 
-.perfil-lista dt {
+.perfil-usuario {
+    margin: 0.35rem 0 0;
+    color: var(--rs-texto-suave);
+    font-size: 1.1rem;
+}
+
+.perfil-rol {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.8rem;
+    background-color: rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(249, 115, 22, 0.55);
+    border-radius: 2rem;
+    color: var(--rs-accion-clara);
+    font-weight: 600;
+}
+
+/* ---------- Cuerpo: publicaciones + panel ---------- */
+.perfil-principal {
+    min-width: 0;
+}
+
+.perfil-cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 52rem) 22rem;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.perfil-subtitulo {
+    margin: 0 0 1rem;
+    font-size: 1.6rem;
+}
+
+.perfil-lateral {
+    position: sticky;
+    top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.panel {
+    padding: 1rem 1.1rem;
+    background-color: var(--rs-superficie);
+    border: 1px solid var(--rs-borde);
+    border-radius: var(--rs-radio);
+}
+
+.panel-separador {
+    margin: 1.1rem 0;
+    border-color: var(--rs-borde);
+    opacity: 1;
+}
+
+.panel-titulo {
+    margin: 0 0 0.75rem;
+    font-size: 1.3rem;
+}
+
+.perfil-descripcion {
+    margin: 0;
+    color: var(--rs-texto-suave);
+    overflow-wrap: anywhere;
+    white-space: pre-line;
+}
+
+.datos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.datos li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.datos i {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: var(--rs-superficie-alta);
+    border-radius: 50%;
+    color: var(--rs-accion);
+    font-size: 1.1rem;
+}
+
+.datos div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.datos small {
     color: var(--rs-texto-suave);
     font-weight: 600;
 }
 
-.perfil-lista dd {
-    margin: 0;
+.datos span {
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Pantallas angostas: una columna, con el panel arriba ---------- */
+@media (max-width: 1399.98px) {
+    .perfil-cuerpo {
+        grid-template-columns: minmax(0, 52rem);
+        justify-content: center;
+    }
+
+    .perfil-lateral {
+        position: static;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .perfil-identidad {
+        flex-direction: column;
+        text-align: center;
+    }
 }

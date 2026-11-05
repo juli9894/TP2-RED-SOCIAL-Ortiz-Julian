@@ -2,7 +2,7 @@
    En pantallas grandes queda aire parejo a los dos lados en vez de un hueco a la izquierda. */
 .layout {
     display: flex;
-    max-width: 88rem;
+    max-width: 100rem;
     min-height: calc(100vh - 3.5rem);
     margin: 0 auto;
 }
@@ -18,4 +18,16 @@
     .contenido {
         padding: 1rem 1rem 5rem;
     }
+}
+
+/* Imagen de fondo de la app: fija, detrás de todo, pegada a la derecha (donde está el dibujo) */
+.fondo-app {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    pointer-events: none;
 }
