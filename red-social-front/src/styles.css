@@ -184,3 +184,17 @@ a:hover {
         font-size: 1.15rem;
     }
 }
+
+/* ---------- Columna central y lista de tarjetas ---------- */
+/* Columna angosta centrada (estilo Reddit): se lee cómoda y no queda vacío a los costados */
+.pagina {
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Las publicaciones van una debajo de la otra */
+.grilla-tarjetas {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
