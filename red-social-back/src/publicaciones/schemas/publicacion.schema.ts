@@ -26,6 +26,10 @@ export class Publicacion {
     // Contador numérico para ordenar rápido
     @Prop({ default: 0 })
     cantidadMeGusta: number;
+    
+    // Contador de comentarios: sube de a uno cada vez que alguien comenta (igual que cantidadMeGusta)
+    @Prop({ default: 0 })
+    cantidadComentarios: number;
 
     // Bandera para borrado lógico
     @Prop({ default: false })

@@ -18,6 +18,7 @@ export interface Publicacion {
     meGusta: string[]; // ids de los usuarios que le dieron me gusta
     cantidadMeGusta: number;
     createdAt: string;
+    cantidadComentarios: number; // cantidad de comentarios que tiene la publicación
 }
 
 // Los filtros que acepta el back en GET /publicaciones (todos opcionales)

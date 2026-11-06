@@ -6,6 +6,16 @@
     padding: 1rem 1.1rem;
 }
 
+/* La tarjeta entera abre el detalle (en el feed y en Mi perfil) */
+.tarjeta-clicable {
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+}
+
+.tarjeta-clicable:hover {
+    box-shadow: 0 0 0 1px var(--rs-accion, #f97316);
+}
+
 .tarjeta-autor {
     display: flex;
     align-items: center;
@@ -49,7 +59,7 @@
     white-space: pre-line; /* respeta los saltos de línea que escribió el usuario */
 }
 
-/* La imagen ocupa el ancho de la tarjeta y se ve entera (sin recortar); si es muy alta, se limita */
+/* La imagen ocupa el ancho de la tarjeta y se ve entera (sin recortar); si es muy alta, se limita. Al tocarla se amplía */
 .tarjeta-imagen {
     display: block;
     width: 100%;
@@ -57,6 +67,7 @@
     object-fit: contain;
     background-color: #1a1a18;
     border-radius: var(--rs-radio);
+    cursor: zoom-in;
 }
 
 .tarjeta-pie {
@@ -109,4 +120,104 @@
     outline: 2px solid var(--rs-accion);
     outline-offset: 3px;
     border-radius: 0.25rem;
+}
+
+.tarjeta-comentarios {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--rs-texto-suave, #b9b8b2);
+    text-decoration: none;
+}
+
+a.tarjeta-comentarios:hover {
+    color: var(--rs-accion, #f97316);
+}
+
+/* Si hay botón de eliminar, queda pegado al enlace en vez de separarse */
+.tarjeta-comentarios + .btn-eliminar {
+    margin-left: 0.75rem;
+}
+
+/* Visor de imagen ampliada */
+.visor {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden; /* la imagen acercada no genera barras de desplazamiento */
+    background: rgba(0, 0, 0, 0.88);
+}
+
+.visor-imagen {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    cursor: zoom-in;
+    user-select: none;
+    touch-action: none; /* para que arrastrar no mueva la página */
+}
+
+.visor-imagen-zoom {
+    cursor: grab;
+}
+
+.visor-imagen-zoom:active {
+    cursor: grabbing;
+}
+
+.visor-herramientas {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.visor-porcentaje {
+    min-width: 3rem;
+    text-align: center;
+}
+
+.visor-boton,
+.visor-cerrar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.visor-cerrar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.visor-boton:hover:not(:disabled),
+.visor-cerrar:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.visor-boton:disabled {
+    opacity: 0.35;
 }

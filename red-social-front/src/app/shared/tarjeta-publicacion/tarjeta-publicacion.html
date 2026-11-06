@@ -1,4 +1,8 @@
-<article class="card tarjeta">
+<article
+    class="card tarjeta"
+    [class.tarjeta-clicable]="enlaceDetalle()"
+    (click)="abrirDetalle($event)"
+>
     <header class="tarjeta-autor">
         @if (publicacion().autor.imagenPerfil; as foto) {
             <img
@@ -20,9 +24,18 @@
     <h2 class="tarjeta-titulo">{{ publicacion().titulo }}</h2>
     <p class="tarjeta-mensaje">{{ publicacion().mensaje }}</p>
 
-    <!-- La imagen aparece solo si la publicación tiene una: no hace falta rellenar nada -->
+    <!-- La imagen aparece solo si la publicación tiene una. Al tocarla se amplía -->
     @if (publicacion().imagen; as imagen) {
-        <img class="tarjeta-imagen" [src]="imagen" alt="Imagen de la publicación" />
+        <img
+            class="tarjeta-imagen"
+            [src]="imagen"
+            alt="Imagen de la publicación"
+            title="Tocá para ampliar"
+            role="button"
+            tabindex="0"
+            (click)="ampliarImagen()"
+            (keydown.enter)="ampliarImagen()"
+        />
     }
 
     <footer class="tarjeta-pie">
@@ -43,6 +56,21 @@
             ></i>
         </button>
         <span>{{ publicacion().cantidadMeGusta }} me gusta</span>
+
+        @if (enlaceDetalle()) {
+            <a class="tarjeta-comentarios" [routerLink]="['/publicaciones', publicacion()._id]">
+                <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                {{ publicacion().cantidadComentarios }}
+                {{ publicacion().cantidadComentarios === 1 ? 'comentario' : 'comentarios' }}
+            </a>
+        } @else {
+            <span class="tarjeta-comentarios">
+                <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                {{ publicacion().cantidadComentarios }}
+                {{ publicacion().cantidadComentarios === 1 ? 'comentario' : 'comentarios' }}
+            </span>
+        }
+
         @if (puedeEliminar()) {
             <button
                 type="button"
@@ -55,3 +83,64 @@
         }
     </footer>
 </article>
+
+<!-- Visor de la imagen ampliada (afuera de la tarjeta, así sus clicks no abren el detalle) -->
+@if (imagenAmpliada()) {
+    <div
+        class="visor"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Imagen ampliada"
+        (click)="cerrarSiEsFondo($event)"
+    >
+        <div class="visor-herramientas">
+            <button
+                type="button"
+                class="visor-boton"
+                aria-label="Alejar"
+                [disabled]="zoom() === 1"
+                (click)="cambiarZoom(-0.5)"
+            >
+                <i class="bi bi-zoom-out" aria-hidden="true"></i>
+            </button>
+            <span class="visor-porcentaje">{{ porcentajeZoom() }}%</span>
+            <button
+                type="button"
+                class="visor-boton"
+                aria-label="Acercar"
+                (click)="cambiarZoom(0.5)"
+            >
+                <i class="bi bi-zoom-in" aria-hidden="true"></i>
+            </button>
+            <button
+                type="button"
+                class="visor-boton"
+                aria-label="Tamaño original"
+                [disabled]="zoom() === 1"
+                (click)="reiniciarZoom()"
+            >
+                <i class="bi bi-arrows-angle-contract" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <button type="button" class="visor-cerrar" aria-label="Cerrar" (click)="cerrarImagen()">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+
+        <img
+            class="visor-imagen"
+            [class.visor-imagen-zoom]="zoom() > 1"
+            [style.transform]="transformacion()"
+            [src]="publicacion().imagen"
+            alt="Imagen de la publicación ampliada"
+            draggable="false"
+            (click)="$event.stopPropagation()"
+            (wheel)="ruedaSobreImagen($event)"
+            (dblclick)="dobleClickImagen()"
+            (pointerdown)="iniciarArrastre($event)"
+            (pointermove)="arrastrar($event)"
+            (pointerup)="terminarArrastre()"
+            (pointercancel)="terminarArrastre()"
+        />
+    </div>
+}

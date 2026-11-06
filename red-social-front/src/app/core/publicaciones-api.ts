@@ -26,6 +26,11 @@ export class PublicacionesApi {
         return this.http.get<Publicacion[]>(`${API_URL}/publicaciones`, { params });
     }
 
+    // [CICLO DETALLE] GET /publicaciones/:id → una sola publicación
+    obtener(id: string) {
+        return this.http.get<Publicacion>(`${API_URL}/publicaciones/${id}`);
+    }
+
     // [CICLO ME GUSTA · paso 3/7] POST /publicaciones/:id/me-gusta
     darMeGusta(id: string) {
         return this.http.post<RespuestaMeGusta>(

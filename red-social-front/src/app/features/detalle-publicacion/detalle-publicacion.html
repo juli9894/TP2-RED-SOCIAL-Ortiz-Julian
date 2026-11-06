@@ -1,0 +1,89 @@
+<section class="pagina">
+    <a class="detalle-volver" routerLink="/publicaciones">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a publicaciones
+    </a>
+
+    @if (aviso()) {
+        <div class="alert alert-danger">{{ aviso() }}</div>
+    }
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando…</span>
+            </div>
+        </div>
+    } @else if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    } @else if (publicacion(); as p) {
+        <app-tarjeta-publicacion
+            [publicacion]="p"
+            [enlaceDetalle]="false"
+            (alternarMeGusta)="alternarMeGusta($event)"
+            (eliminar)="pedirEliminar()"
+        />
+
+        <section class="comentarios" aria-labelledby="titulo-comentarios">
+            <h2 id="titulo-comentarios" class="comentarios-titulo">Comentarios</h2>
+
+            <!-- Caja para escribir un comentario nuevo -->
+            <div class="comentar">
+                <label class="visually-hidden" for="nuevo-comentario">Tu comentario</label>
+                <textarea
+                    id="nuevo-comentario"
+                    class="form-control"
+                    rows="2"
+                    placeholder="Escribí tu ayuda o tu pregunta…"
+                    [formControl]="textoComentario"
+                ></textarea>
+                @if (errorEnvio()) {
+                    <div class="comentar-error">{{ errorEnvio() }}</div>
+                }
+                <button
+                    type="button"
+                    class="btn btn-warning"
+                    [disabled]="enviandoComentario()"
+                    (click)="comentar()"
+                >
+                    Comentar
+                </button>
+            </div>
+
+            @for (c of comentarios(); track c._id) {
+                <app-comentario [comentario]="c" (editado)="reemplazarComentario($event)"/>
+            } @empty {
+                @if (!cargandoComentarios() && !errorComentarios()) {
+                    <p class="comentarios-vacio">Todavía no hay comentarios. ¡Sé el primero en ayudar!</p>
+                }
+            }
+
+            @if (errorComentarios()) {
+                <div class="alert alert-danger">{{ errorComentarios() }}</div>
+            }
+
+            @if (cargandoComentarios()) {
+                <div class="text-center">
+                    <div class="spinner-border spinner-border-sm text-warning" role="status">
+                        <span class="visually-hidden">Cargando comentarios…</span>
+                    </div>
+                </div>
+            }
+
+            @if (hayMas() && !cargandoComentarios()) {
+                <button type="button" class="btn btn-outline-light" (click)="cargarComentarios()">
+                    Cargar más comentarios
+                </button>
+            }
+        </section>
+    }
+
+    @if (confirmandoEliminar()) {
+        <app-modal-confirmacion
+            titulo="Eliminar publicación"
+            mensaje="¿Seguro que querés eliminar esta publicación? Ya no se va a mostrar."
+            textoConfirmar="Eliminar"
+            (confirmar)="confirmarEliminar()"
+            (cancelar)="cancelarEliminar()"
+        />
+    }
+</section>

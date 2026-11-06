@@ -5,6 +5,8 @@ import {
     Post,
     UploadedFile,
     UseInterceptors,
+    Req,
+    UseGuards
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
@@ -12,6 +14,8 @@ import { LIMITE_IMAGEN_PERFIL_BYTES } from '../common/constantes.js';
 import { CrearUsuarioDto } from '../usuarios/dto/crear-usuario.dto.js';
 import { LoginDto } from '../usuarios/dto/login.dto.js';
 import { AuthService } from './auth.service.js';
+import { AuthGuard } from './auth.guard.js';
+import type { PedidoAutenticado } from './interfaces/payload-token.interface.js';
 
 @Controller('auth')
 export class AuthController {
@@ -37,5 +41,21 @@ export class AuthController {
     @HttpCode(200)
     login(@Body() datos: LoginDto) {
         return this.authService.login(datos);
+    }
+
+    // [CICLO SESIÓN] POST /auth/autorizar: responde 200 si el token es válido (el AuthGuard ya lo verificó)
+    @Post('autorizar')
+    @HttpCode(200)
+    @UseGuards(AuthGuard)
+    autorizar(@Req() pedido: PedidoAutenticado) {
+        return pedido.usuario; // datos del token: id, usuario, perfil
+    }
+
+    // [CICLO SESIÓN] POST /auth/refrescar: devuelve un token nuevo (el AuthGuard ya validó el actual)
+    @Post('refrescar')
+    @HttpCode(200)
+    @UseGuards(AuthGuard)
+    refrescar(@Req() pedido: PedidoAutenticado) {
+        return this.authService.refrescar(pedido.usuario!);
     }
 }

@@ -1,0 +1,70 @@
+.comentario {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--rs-superficie, #2f2f2c);
+    border: 1px solid var(--rs-borde, #4a4a46);
+    border-radius: 0.6rem;
+}
+
+.comentario-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.comentario-avatar-icono {
+    font-size: 2.25rem;
+    line-height: 1;
+    color: var(--rs-texto-suave, #b9b8b2);
+    flex-shrink: 0;
+}
+
+.comentario-cuerpo {
+    min-width: 0; /* deja que el texto largo se corte dentro de la caja */
+    flex: 1;
+}
+
+.comentario-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.comentario-meta {
+    color: var(--rs-texto-suave, #b9b8b2);
+}
+
+.comentario-mensaje {
+    margin: 0.25rem 0 0;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.comentario-editar {
+    margin-left: auto; /* lo empuja a la derecha de la cabecera */
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--rs-texto-suave, #b9b8b2);
+    cursor: pointer;
+}
+
+.comentario-editar:hover {
+    color: var(--rs-accion, #f97316);
+}
+
+.comentario-error {
+    margin-top: 0.25rem;
+    color: #ff8a80;
+}
+
+.comentario-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}

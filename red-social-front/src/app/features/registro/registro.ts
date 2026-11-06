@@ -117,9 +117,9 @@ export class Registro {
         // Paso 2: this.auth.registro() (core/auth.ts) prepara el POST; el subscribe lo envía
         // al back (puerto 3000 en local), endpoint /auth/registro
         this.auth.registro(formData).subscribe({
-            // [paso 6/6] El back creó el usuario: vamos a /login
+            // [paso 6/6] El back creó el usuario y devolvió token + usuario (auth.ts ya guardó la sesión)
             next: () => {
-                this.router.navigate(['/login']);
+                this.router.navigate(['/publicaciones']);
             },
             error: (err: HttpErrorResponse) => {
                 this.cargando.set(false);

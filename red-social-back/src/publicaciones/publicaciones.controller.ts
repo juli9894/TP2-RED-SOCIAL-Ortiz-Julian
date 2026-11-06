@@ -47,6 +47,13 @@ export class PublicacionesController {
         return this.publicacionesService.listar(filtros);
     }
 
+    // [CICLO DETALLE] GET /publicaciones/:id → una publicación
+    @UseGuards(AuthGuard)
+    @Get(':id')
+    obtener(@Param('id') id: string) {
+        return this.publicacionesService.obtenerPorId(id);
+    }
+    
     // [CICLO ELIMINAR · paso 6/8] 
     @UseGuards(AuthGuard)
     @Delete(':id')

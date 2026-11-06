@@ -137,6 +137,19 @@ export class PublicacionesService {
         return publicacion;
     }
 
+    // [CICLO DETALLE] Una sola publicación por id, con los datos de su autor
+    async obtenerPorId(id: string) {
+        this.validarId(id);
+
+        const publicacion = await this.publicacionModel
+            .findOne({ _id: id, eliminada: false })
+            .populate('autor', 'usuario imagenPerfil');
+
+        if (!publicacion) {
+            throw new NotFoundException('Publicación no encontrada');
+        }
+        return publicacion;
+    }
     // ─── AYUDANTES (los usan los métodos de arriba) ─────────────────
 
     // Si el id no tiene forma de id de Mongo, corta con 400
@@ -155,4 +168,6 @@ export class PublicacionesService {
             ? new ConflictException(mensajeConflicto)
             : new NotFoundException('Publicación no encontrada');
     }
+
+    
 }

@@ -1,0 +1,60 @@
+<article class="comentario">
+    @if (comentario().autor.imagenPerfil; as foto) {
+        <img
+            class="comentario-avatar"
+            [src]="foto"
+            alt="Foto de {{ comentario().autor.usuario }}"
+        />
+    } @else {
+        <i class="bi bi-person-circle comentario-avatar-icono" aria-hidden="true"></i>
+    }
+
+    <div class="comentario-cuerpo">
+        <div class="comentario-cabecera">
+            <strong>{{ comentario().autor.usuario }}</strong>
+            <small class="comentario-meta">
+                {{ comentario().createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            </small>
+            @if (comentario().modificado) {
+                <small class="comentario-meta">(editado)</small>
+            }
+            @if (esMio() && !editando()) {
+                <button
+                    type="button"
+                    class="comentario-editar"
+                    aria-label="Editar comentario"
+                    (click)="empezarEdicion()"
+                >
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                </button>
+            }
+        </div>
+
+        @if (editando()) {
+            <textarea
+                class="form-control"
+                rows="2"
+                aria-label="Editar comentario"
+                [formControl]="texto"
+            ></textarea>
+            @if (error()) {
+                <div class="comentario-error">{{ error() }}</div>
+            }
+            <div class="comentario-acciones">
+                <button type="button" class="btn btn-sm btn-outline-light" (click)="cancelar()">
+                    Cancelar
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-sm btn-warning"
+                    [disabled]="guardando()"
+                    (click)="guardar()"
+                >
+                    Guardar
+                </button>
+            </div>
+        } @else {
+            <p class="comentario-mensaje">{{ comentario().mensaje }}</p>
+        }
+    </div>
+</article>
