@@ -10,7 +10,7 @@ import { Auth } from '../../core/auth';
 import { LIMITE_IMAGEN_PERFIL_MB } from '../../core/constantes';
 import { mensajeDeError } from '../../core/errores';
 import { validarImagen } from '../../core/validar-imagen';
-import { contrasenasIguales } from '../../core/contraseñas-iguales';
+import { contrasenasIguales } from '../../core/contrasenas-iguales';
 
 
 @Component({

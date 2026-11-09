@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Comentario, ComentarioDocument } from '../comentarios/schemas/comentario.schema.js';
 import { Usuario, UsuarioDocument } from '../usuarios/schemas/usuario.schema.js';
-import { RangoFechasDto } from './dto/rango-fechas.dts.js';
+import { RangoFechasDto } from './dto/rango-fechas.dto.js';
 import { Publicacion, PublicacionDocument } from './schemas/publicacion.schema.js';
 
 // Argentina no cambia la hora en verano, así que el desfase es siempre -03:00

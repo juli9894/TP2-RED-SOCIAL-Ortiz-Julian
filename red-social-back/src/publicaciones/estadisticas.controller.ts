@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AdminGuard } from '../auth/admin.guard.js';
 import { AuthGuard } from '../auth/auth.guard.js';
-import { RangoFechasDto } from './dto/rango-fechas.dts.js';
+import { RangoFechasDto } from './dto/rango-fechas.dto.js';
 import { EstadisticasService } from './estadisticas.service.js';
 
 // Solo administradores: primero AuthGuard (401 sin token), después AdminGuard (403 si no es admin)

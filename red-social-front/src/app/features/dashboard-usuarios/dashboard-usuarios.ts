@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../../core/auth';
 import { LIMITE_IMAGEN_PERFIL_MB } from '../../core/constantes';
-import { contrasenasIguales } from '../../core/contraseñas-iguales';
+import { contrasenasIguales } from '../../core/contrasenas-iguales';
 import { mensajeDeError } from '../../core/errores';
 import type { UsuarioListado } from '../../core/models/usuario.model';
 import { UsuariosApi } from '../../core/usuarios-api';
