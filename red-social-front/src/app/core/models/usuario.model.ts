@@ -21,3 +21,7 @@ export interface RespuestaLogin {
     token: string;
     usuario: UsuarioSesion;
 }
+
+export interface UsuarioListado extends UsuarioSesion {
+    habilitado: boolean;
+}

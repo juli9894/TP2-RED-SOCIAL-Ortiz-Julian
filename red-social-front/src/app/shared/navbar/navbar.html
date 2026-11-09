@@ -8,7 +8,7 @@
         <nav class="acciones">
             @if (auth.usuarioActual(); as usuario) {
                 @if (usuario.imagenPerfil) {
-                    <img class="avatar" [src]="usuario.imagenPerfil" alt="" />
+                    <img class="avatar" [src]="usuario.imagenPerfil" alt="" appImagenRespaldo />
                 } @else {
                     <i class="bi bi-person-circle avatar-icono"></i>
                 }

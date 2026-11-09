@@ -1,0 +1,255 @@
+<section class="pagina">
+    <div class="usuarios-cabecera">
+        <h1 class="usuarios-titulo">Usuarios</h1>
+        <button type="button" class="btn btn-warning btn-sm" (click)="alternarFormulario()">
+            <i class="bi bi-person-plus" aria-hidden="true"></i>
+            {{ mostrarFormulario() ? 'Cerrar' : 'Nuevo usuario' }}
+        </button>
+    </div>
+
+    @if (mostrarFormulario()) {
+        <form class="alta-formulario" [formGroup]="formulario" (ngSubmit)="crearUsuario()" novalidate>
+            <h2 class="alta-titulo">Nuevo usuario</h2>
+
+            <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-nombre">Nombre</label>
+                    <input
+                        id="alta-nombre"
+                        type="text"
+                        class="form-control"
+                        formControlName="nombre"
+                        [class.is-invalid]="invalido('nombre')"
+                    />
+                    @if (invalido('nombre')) {
+                        <div class="invalid-feedback">Ingresá el nombre.</div>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-apellido">Apellido</label>
+                    <input
+                        id="alta-apellido"
+                        type="text"
+                        class="form-control"
+                        formControlName="apellido"
+                        [class.is-invalid]="invalido('apellido')"
+                    />
+                    @if (invalido('apellido')) {
+                        <div class="invalid-feedback">Ingresá el apellido.</div>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="alta-correo">Correo</label>
+                <input
+                    id="alta-correo"
+                    type="email"
+                    class="form-control"
+                    formControlName="correo"
+                    [class.is-invalid]="invalido('correo')"
+                />
+                @if (invalido('correo')) {
+                    <div class="invalid-feedback">Ingresá un correo válido.</div>
+                }
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-usuario">Nombre de usuario</label>
+                    <input
+                        id="alta-usuario"
+                        type="text"
+                        class="form-control"
+                        formControlName="usuario"
+                        [class.is-invalid]="invalido('usuario')"
+                    />
+                    @if (invalido('usuario')) {
+                        <div class="invalid-feedback">Elegí un nombre de usuario.</div>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-fecha">Fecha de nacimiento</label>
+                    <input
+                        id="alta-fecha"
+                        type="date"
+                        class="form-control"
+                        formControlName="fechaNacimiento"
+                        [class.is-invalid]="invalido('fechaNacimiento')"
+                    />
+                    @if (invalido('fechaNacimiento')) {
+                        <div class="invalid-feedback">Ingresá la fecha de nacimiento.</div>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="alta-descripcion">Descripción breve</label>
+                <textarea
+                    id="alta-descripcion"
+                    rows="2"
+                    class="form-control"
+                    formControlName="descripcion"
+                    [class.is-invalid]="invalido('descripcion')"
+                ></textarea>
+                @if (invalido('descripcion')) {
+                    <div class="invalid-feedback">Escribí una descripción breve.</div>
+                }
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-contrasena">Contraseña</label>
+                    <input
+                        id="alta-contrasena"
+                        type="password"
+                        class="form-control"
+                        formControlName="contrasena"
+                        autocomplete="new-password"
+                        [class.is-invalid]="invalido('contrasena')"
+                    />
+                    @if (invalido('contrasena')) {
+                        <div class="invalid-feedback">
+                            @if (formulario.controls.contrasena.hasError('required')) {
+                                Ingresá una contraseña.
+                            } @else {
+                                Mínimo 8 caracteres, una mayúscula y un número.
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="col-sm-6">
+                    <label class="form-label" for="alta-repetir">Repetir contraseña</label>
+                    <input
+                        id="alta-repetir"
+                        type="password"
+                        class="form-control"
+                        formControlName="repetirContrasena"
+                        autocomplete="new-password"
+                        [class.is-invalid]="invalido('repetirContrasena') || noCoinciden()"
+                    />
+                    @if (invalido('repetirContrasena') || noCoinciden()) {
+                        <div class="invalid-feedback">Las contraseñas no coinciden.</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Los dos radio buttons: todos comparten formControlName="perfil" y cada uno tiene su value -->
+            <fieldset class="mb-3">
+                <legend class="form-label">Perfil</legend>
+                <div class="form-check form-check-inline">
+                    <input
+                        id="perfil-usuario"
+                        class="form-check-input"
+                        type="radio"
+                        formControlName="perfil"
+                        value="usuario"
+                    />
+                    <label class="form-check-label" for="perfil-usuario">Usuario</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input
+                        id="perfil-admin"
+                        class="form-check-input"
+                        type="radio"
+                        formControlName="perfil"
+                        value="administrador"
+                    />
+                    <label class="form-check-label" for="perfil-admin">Administrador</label>
+                </div>
+            </fieldset>
+
+            <div class="mb-3">
+                <label class="form-label" for="alta-imagen">
+                    Foto de perfil <span class="text-body-secondary">(opcional)</span>
+                </label>
+                <input
+                    id="alta-imagen"
+                    type="file"
+                    accept="image/*"
+                    class="form-control"
+                    (change)="seleccionarArchivo($event)"
+                    [class.is-invalid]="errorArchivo()"
+                />
+                @if (errorArchivo()) {
+                    <div class="invalid-feedback">{{ errorArchivo() }}</div>
+                }
+                @if (vistaPrevia()) {
+                    <img class="alta-vista-previa mt-3" [src]="vistaPrevia()" alt="Vista previa de la foto" />
+                }
+            </div>
+
+            @if (errorAlta()) {
+                <div class="alert alert-danger" role="alert">{{ errorAlta() }}</div>
+            }
+
+            <button type="submit" class="btn btn-warning" [disabled]="guardando()">
+                {{ guardando() ? 'Creando…' : 'Crear usuario' }}
+            </button>
+        </form>
+    }
+
+    @if (aviso()) {
+        <div class="alert alert-danger">{{ aviso() }}</div>
+    }
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando…</span>
+            </div>
+        </div>
+    } @else if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    } @else {
+        <div class="usuarios-lista">
+            @for (u of usuarios(); track u._id) {
+                <article class="usuario-fila" appResaltar [class.usuario-deshabilitado]="!estaHabilitado(u)">
+                    @if (u.imagenPerfil) {
+                        <img class="usuario-avatar" [src]="u.imagenPerfil" alt="Foto de {{ u.usuario }}" appImagenRespaldo />
+                    } @else {
+                        <i class="bi bi-person-circle usuario-avatar-icono" aria-hidden="true"></i>
+                    }
+
+                    <div class="usuario-datos">
+                        <strong>{{ u.nombre }} {{ u.apellido }}</strong>
+                        <small>{{ u.usuario }} · {{ u.correo }}</small>
+                    </div>
+
+                    <span class="usuario-etiqueta">{{ u.perfil }}</span>
+                    <span
+                        class="usuario-etiqueta"
+                        [class.etiqueta-ok]="estaHabilitado(u)"
+                        [class.etiqueta-baja]="!estaHabilitado(u)"
+                    >
+                        {{ estaHabilitado(u) ? 'Habilitado' : 'Deshabilitado' }}
+                    </span>
+
+                    @if (!esYo(u)) {
+                        @if (estaHabilitado(u)) {
+                            <button type="button" class="btn btn-sm btn-outline-light" (click)="pedirDeshabilitar(u)">
+                                Deshabilitar
+                            </button>
+                        } @else {
+                            <button type="button" class="btn btn-sm btn-warning" (click)="habilitar(u)">
+                                Habilitar
+                            </button>
+                        }
+                    }
+                </article>
+            } @empty {
+                <p>No hay usuarios.</p>
+            }
+        </div>
+    }
+
+    @if (usuarioPorDeshabilitar(); as u) {
+        <app-modal-confirmacion
+            titulo="Deshabilitar usuario"
+            [mensaje]="'¿Seguro que querés deshabilitar a ' + u.usuario + '? No va a poder ingresar hasta que lo vuelvas a habilitar.'"
+            textoConfirmar="Deshabilitar"
+            (confirmar)="confirmarDeshabilitar()"
+            (cancelar)="cancelarDeshabilitar()"
+        />
+    }
+</section>

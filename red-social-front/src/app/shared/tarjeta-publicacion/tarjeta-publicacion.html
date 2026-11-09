@@ -9,14 +9,15 @@
                 class="tarjeta-avatar"
                 [src]="foto"
                 alt="Foto de {{ publicacion().autor.usuario }}"
+                appImagenRespaldo
             />
         } @else {
             <i class="bi bi-person-circle tarjeta-avatar-icono" aria-hidden="true"></i>
         }
         <div class="tarjeta-autor-datos">
             <strong>{{ publicacion().autor.usuario }}</strong>
-            <small class="tarjeta-fecha">
-                {{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            <small class="tarjeta-fecha" [title]="publicacion().createdAt | date: 'dd/MM/yyyy HH:mm'">
+                {{ publicacion().createdAt | tiempoRelativo }}
             </small>
         </div>
     </header>
@@ -60,8 +61,7 @@
         @if (enlaceDetalle()) {
             <a class="tarjeta-comentarios" [routerLink]="['/publicaciones', publicacion()._id]">
                 <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                {{ publicacion().cantidadComentarios }}
-                {{ publicacion().cantidadComentarios === 1 ? 'comentario' : 'comentarios' }}
+                {{ publicacion().cantidadComentarios | pluralizar: 'comentario' : 'comentarios' }}
             </a>
         } @else {
             <span class="tarjeta-comentarios">

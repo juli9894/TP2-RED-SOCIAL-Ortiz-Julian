@@ -3,12 +3,15 @@ import { Component, computed, HostListener, inject, input, output, signal } from
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../core/auth';
 import type { Publicacion } from '../../core/models/publicacion.model';
+import { PluralizarPipe } from '../pipes/pluralizar.pipe';
+import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
+import { ImagenRespaldoDirective } from '../directivas/imagen-respaldo.directive';
 
 const ZOOM_MAXIMO = 4;
 
 @Component({
-    selector: 'app-tarjeta-publicacion',
-    imports: [DatePipe, RouterLink],
+    selector: 'app-tarjeta-publicacion',            
+    imports: [DatePipe, RouterLink, PluralizarPipe, TiempoRelativoPipe, ImagenRespaldoDirective],
     templateUrl: './tarjeta-publicacion.html',
     styleUrl: './tarjeta-publicacion.css',
 })

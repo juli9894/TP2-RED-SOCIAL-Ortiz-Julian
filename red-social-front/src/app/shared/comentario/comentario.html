@@ -4,6 +4,7 @@
             class="comentario-avatar"
             [src]="foto"
             alt="Foto de {{ comentario().autor.usuario }}"
+            appImagenRespaldo
         />
     } @else {
         <i class="bi bi-person-circle comentario-avatar-icono" aria-hidden="true"></i>
@@ -12,8 +13,8 @@
     <div class="comentario-cuerpo">
         <div class="comentario-cabecera">
             <strong>{{ comentario().autor.usuario }}</strong>
-            <small class="comentario-meta">
-                {{ comentario().createdAt | date: 'dd/MM/yyyy HH:mm' }}
+            <small class="comentario-meta" [title]="comentario().createdAt | date: 'dd/MM/yyyy HH:mm'">
+                {{ comentario().createdAt | tiempoRelativo }}
             </small>
             @if (comentario().modificado) {
                 <small class="comentario-meta">(editado)</small>
@@ -36,6 +37,7 @@
                 rows="2"
                 aria-label="Editar comentario"
                 [formControl]="texto"
+                appAutoFoco
             ></textarea>
             @if (error()) {
                 <div class="comentario-error">{{ error() }}</div>

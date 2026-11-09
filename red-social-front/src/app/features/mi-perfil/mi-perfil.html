@@ -75,7 +75,7 @@
                             <i class="bi bi-cake2" aria-hidden="true"></i>
                             <div>
                                 <small>Fecha de nacimiento</small>
-                                <span>{{ yo.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }}</span>
+                                <span>{{ yo.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }} ({{ yo.fechaNacimiento | edad }})</span>
                             </div>
                         </li>
                     </ul>

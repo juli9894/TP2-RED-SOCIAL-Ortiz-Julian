@@ -1,0 +1,44 @@
+.estadisticas-titulo {
+    margin-bottom: 1rem;
+}
+
+.estadisticas-subtitulo {
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+}
+
+.estadisticas-ayuda {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--rs-texto-suave, #b9b8b2);
+}
+
+.estadisticas-filtro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--rs-superficie, #2f2f2c);
+    border: 1px solid var(--rs-borde, #4a4a46);
+    border-radius: 0.6rem;
+}
+
+.estadisticas-grilla {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.grafico-tarjeta {
+    padding: 1rem;
+    background: var(--rs-superficie, #2f2f2c);
+    border: 1px solid var(--rs-borde, #4a4a46);
+    border-radius: 0.6rem;
+}
+
+.estadisticas-vacio {
+    margin: 0;
+    color: var(--rs-texto-suave, #b9b8b2);
+}

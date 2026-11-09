@@ -5,9 +5,10 @@ import { PUBLICACIONES_EN_MI_PERFIL } from '../../core/constantes';
 import { PublicacionesApi } from '../../core/publicaciones-api';
 import type { Publicacion } from '../../core/models/publicacion.model';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
+import { EdadPipe } from '../../shared/pipes/edad.pipe';
 
 @Component({
-    imports: [DatePipe, TarjetaPublicacion],
+    imports: [DatePipe, TarjetaPublicacion, EdadPipe],
     selector: 'app-mi-perfil',
     styleUrl: './mi-perfil.css',
     templateUrl: './mi-perfil.html',

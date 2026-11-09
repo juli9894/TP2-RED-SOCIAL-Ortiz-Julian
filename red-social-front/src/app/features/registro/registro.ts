@@ -1,10 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import {
-    AbstractControl,
     FormBuilder,
     ReactiveFormsModule,
-    ValidationErrors,
     Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -12,13 +10,8 @@ import { Auth } from '../../core/auth';
 import { LIMITE_IMAGEN_PERFIL_MB } from '../../core/constantes';
 import { mensajeDeError } from '../../core/errores';
 import { validarImagen } from '../../core/validar-imagen';
+import { contrasenasIguales } from '../../core/contraseñas-iguales';
 
-// Validador del grupo: la contraseña y su repetición tienen que ser iguales
-function contrasenasIguales(grupo: AbstractControl): ValidationErrors | null {
-    const contrasena = grupo.get('contrasena')?.value;
-    const repetir = grupo.get('repetirContrasena')?.value;
-    return contrasena === repetir ? null : { noCoinciden: true };
-}
 
 @Component({
     selector: 'app-registro',

@@ -1,0 +1,76 @@
+<section class="pagina">
+    <h1 class="estadisticas-titulo">Estadísticas</h1>
+
+    <div class="estadisticas-filtro">
+        <div>
+            <label class="form-label" for="desde">Desde</label>
+            <input id="desde" type="date" class="form-control" [formControl]="desde" />
+        </div>
+        <div>
+            <label class="form-label" for="hasta">Hasta</label>
+            <input id="hasta" type="date" class="form-control" [formControl]="hasta" />
+        </div>
+        <button type="button" class="btn btn-warning" [disabled]="cargando()" (click)="cargar()">
+            Ver estadísticas
+        </button>
+    </div>
+
+    @if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+    }
+
+    @if (cargando()) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Cargando…</span>
+            </div>
+        </div>
+    } @else {
+        <div class="estadisticas-grilla">
+            <article class="grafico-tarjeta">
+                <h2 class="estadisticas-subtitulo">Publicaciones por usuario</h2>
+                <p class="estadisticas-ayuda">Cuántas publicaciones hizo cada usuario en el lapso elegido.</p>
+                @if (publicacionesPorUsuario().length) {
+                    <app-grafico
+                        tipo="bar"
+                        nombre="Publicaciones"
+                        [etiquetas]="usuariosEtiquetas()"
+                        [valores]="usuariosValores()"
+                    />
+                } @else {
+                    <p class="estadisticas-vacio">No hay datos en este lapso.</p>
+                }
+            </article>
+
+            <article class="grafico-tarjeta">
+                <h2 class="estadisticas-subtitulo">Comentarios por día</h2>
+                <p class="estadisticas-ayuda">Cuántos comentarios se escribieron cada día, entre todos los usuarios.</p>
+                @if (comentariosPorDia().length) {
+                    <app-grafico
+                        tipo="line"
+                        nombre="Comentarios"
+                        [etiquetas]="diasEtiquetas()"
+                        [valores]="diasValores()"
+                    />
+                } @else {
+                    <p class="estadisticas-vacio">No hay datos en este lapso.</p>
+                }
+            </article>
+
+            <article class="grafico-tarjeta">
+                <h2 class="estadisticas-subtitulo">Comentarios por publicación</h2>
+                <p class="estadisticas-ayuda">Las 10 publicaciones que más comentarios recibieron en el lapso.</p>
+                @if (comentariosPorPublicacion().length) {
+                    <app-grafico
+                        tipo="pie"
+                        nombre="Comentarios"
+                        [etiquetas]="publicacionesEtiquetas()"
+                        [valores]="publicacionesValores()"
+                    />
+                } @else {
+                    <p class="estadisticas-vacio">No hay datos en este lapso.</p>
+                }
+            </article>
+        </div>
+    }
+</section>

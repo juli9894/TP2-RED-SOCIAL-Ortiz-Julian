@@ -6,12 +6,15 @@ import { Auth } from '../../core/auth';
 import { ComentariosApi } from '../../core/comentarios-api';
 import { mensajeDeError } from '../../core/errores';
 import type { Comentario as ComentarioModelo } from '../../core/models/comentario.model';
+import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
+import { AutoFocoDirective } from '../directivas/auto-foco.directive';
+import { ImagenRespaldoDirective } from '../directivas/imagen-respaldo.directive';
 
 // Dibuja un comentario: autor, fecha, "(editado)" si fue modificado y el mensaje.
 // Si el comentario es del usuario logueado, permite editarlo.
 @Component({
     selector: 'app-comentario',
-    imports: [DatePipe, ReactiveFormsModule],
+    imports: [DatePipe, ReactiveFormsModule, TiempoRelativoPipe, AutoFocoDirective, ImagenRespaldoDirective],
     templateUrl: './comentario.html',
     styleUrl: './comentario.css',
 })

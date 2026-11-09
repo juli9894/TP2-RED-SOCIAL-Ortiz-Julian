@@ -9,4 +9,14 @@
             <span>Mi perfil</span>
         </a>
     }
+    @if (auth.usuarioActual()?.perfil === 'administrador') {
+        <a class="lateral-enlace" routerLink="/dashboard/usuarios" routerLinkActive="activo">
+            <i class="bi bi-people"></i>
+            <span>Usuarios</span>
+        </a>
+        <a class="lateral-enlace" routerLink="/dashboard/estadisticas" routerLinkActive="activo">
+            <i class="bi bi-bar-chart"></i>
+            <span>Estadísticas</span>
+        </a>
+    }
 </nav>
