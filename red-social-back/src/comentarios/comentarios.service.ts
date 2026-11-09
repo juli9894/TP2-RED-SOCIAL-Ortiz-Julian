@@ -61,6 +61,9 @@ export class ComentariosService {
             throw new NotFoundException('Comentario no encontrado');
         }
 
+        // Si la publicación fue dada de baja, sus comentarios tampoco están disponibles
+        await this.validarPublicacion(comentario.publicacion.toString());
+
         // Si quien pide el cambio no es el autor: 403
         if (comentario.autor.toString() !== usuarioId) {
             throw new ForbiddenException('Solo el autor puede editar su comentario');

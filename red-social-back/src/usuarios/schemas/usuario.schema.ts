@@ -31,6 +31,10 @@ export class Usuario {
 
     @Prop({ enum: ['usuario', 'administrador'], default: 'usuario' })
     perfil: string;
+
+    // Baja lógica: false = el usuario no puede ingresar
+    @Prop({ default: true })
+    habilitado: boolean;
 }
 
 export const UsuarioSchema = SchemaFactory.createForClass(Usuario);

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException , ForbiddenException} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -45,6 +45,12 @@ export class AuthService {
 
         if (!usuario || !contrasenaValida) {
             throw new UnauthorizedException('Credenciales incorrectas');
+        }
+
+        if (usuario.habilitado === false) {
+            throw new ForbiddenException(
+                'Tu cuenta está deshabilitada. Contactá a un administrador.',
+            );
         }
 
         const { contrasena, ...sinContrasena } = usuario.toObject();
