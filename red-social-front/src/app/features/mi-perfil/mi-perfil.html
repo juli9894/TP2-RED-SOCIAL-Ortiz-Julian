@@ -1,7 +1,7 @@
 <section class="perfil-pagina">
     @if (usuario(); as yo) {
         <div class="perfil-cuerpo">
-            <!-- Izquierda: cabecera con foto y nombre + últimas publicaciones -->
+            <!-- Izquierda: cabecera con foto y nombre + publicaciones -->
             <div class="perfil-principal">
                 <!-- Cabecera: foto, nombre y rol -->
                 <header class="perfil-portada">
@@ -30,9 +30,9 @@
                     </div>
                 </header>
 
-                <!-- Izquierda: últimas publicaciones -->
+                <!-- Izquierda: mis publicaciones (arrancan 3 y se pueden traer más) -->
                 <div class="perfil-publicaciones">
-                    <h2 class="perfil-subtitulo">Mis últimas publicaciones</h2>
+                    <h2 class="perfil-subtitulo">Mis publicaciones</h2>
 
                     @if (cargando()) {
                         <p>Cargando...</p>
@@ -49,6 +49,17 @@
                                 <app-tarjeta-publicacion [publicacion]="publicacion" [soloLectura]="true" />
                             }
                         </div>
+
+                        @if (hayMas()) {
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary"
+                                [disabled]="cargandoMas()"
+                                (click)="verMas()"
+                            >
+                                {{ cargandoMas() ? 'Cargando...' : 'Ver más publicaciones' }}
+                            </button>
+                        }
                     }
                 </div>
             </div>
