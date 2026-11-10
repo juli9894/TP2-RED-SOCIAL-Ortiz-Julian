@@ -9,12 +9,14 @@ import type { Comentario as ComentarioModelo } from '../../core/models/comentari
 import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
 import { AutoFocoDirective } from '../directivas/auto-foco.directive';
 import { ImagenRespaldoDirective } from '../directivas/imagen-respaldo.directive';
+import { MAX_COMENTARIO } from '../../core/constantes';
+import { TextoExpandible } from '../texto-expandible/texto-expandible';
 
 // Dibuja un comentario: autor, fecha, "(editado)" si fue modificado y el mensaje.
 // Si el comentario es del usuario logueado, permite editarlo.
 @Component({
     selector: 'app-comentario',
-    imports: [DatePipe, ReactiveFormsModule, TiempoRelativoPipe, AutoFocoDirective, ImagenRespaldoDirective],
+    imports: [DatePipe, ReactiveFormsModule, TiempoRelativoPipe, AutoFocoDirective, ImagenRespaldoDirective, TextoExpandible],
     templateUrl: './comentario.html',
     styleUrl: './comentario.css',
 })
@@ -36,6 +38,7 @@ export class Comentario {
     protected readonly guardando = signal(false);
     protected readonly error = signal('');
     protected readonly texto = new FormControl('', { nonNullable: true });
+    protected readonly maxComentario = MAX_COMENTARIO;
 
     // [CICLO EDITAR COMENTARIO · paso 1] Abre la caja con el texto actual
     protected empezarEdicion() {

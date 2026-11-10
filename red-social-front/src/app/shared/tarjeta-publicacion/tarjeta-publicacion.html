@@ -23,8 +23,7 @@
     </header>
 
     <h2 class="tarjeta-titulo">{{ publicacion().titulo }}</h2>
-    <p class="tarjeta-mensaje">{{ publicacion().mensaje }}</p>
-
+    <app-texto-expandible class="tarjeta-mensaje" [texto]="publicacion().mensaje" />
     <!-- La imagen aparece solo si la publicación tiene una. Al tocarla se amplía -->
     @if (publicacion().imagen; as imagen) {
         <img

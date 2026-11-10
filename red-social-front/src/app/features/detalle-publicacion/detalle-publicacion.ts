@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ComentariosApi } from '../../core/comentarios-api';
-import { COMENTARIOS_POR_PAGINA } from '../../core/constantes';
+import { COMENTARIOS_POR_PAGINA, MAX_COMENTARIO } from '../../core/constantes';
 import { mensajeDeError } from '../../core/errores';
 import type { Comentario as ComentarioModelo } from '../../core/models/comentario.model';
 import type { Publicacion } from '../../core/models/publicacion.model';
@@ -11,7 +11,6 @@ import { PublicacionesApi } from '../../core/publicaciones-api';
 import { Comentario } from '../../shared/comentario/comentario';
 import { ModalConfirmacion } from '../../shared/modal-confirmacion/modal-confirmacion';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
-
 // [CICLO DETALLE] Pantalla de una publicación: la lee del id que viene en la dirección
 @Component({
     selector: 'app-detalle-publicacion',
@@ -39,6 +38,7 @@ export class DetallePublicacion implements OnInit {
 
     // Caja para escribir un comentario nuevo
     protected textoComentario = new FormControl('', { nonNullable: true });
+    protected readonly maxComentario = MAX_COMENTARIO;
     protected enviandoComentario = signal(false);
     protected errorEnvio = signal('');
 

@@ -5,3 +5,6 @@ export const PUBLICACIONES_EN_MI_PERFIL = 3;
 export const TIEMPO_MINIMO_CARGANDO_MS = 2500;
 export const AVISO_SESION_ANTES_MS = 5 * 60 * 1000;
 export const COMENTARIOS_POR_PAGINA = 3;
+export const MAX_TITULO = 100;
+export const MAX_MENSAJE_PUBLICACION = 2000;
+export const MAX_COMENTARIO = 500;

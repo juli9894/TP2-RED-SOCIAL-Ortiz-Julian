@@ -35,7 +35,9 @@
                     rows="2"
                     placeholder="Escribí tu ayuda o tu pregunta…"
                     [formControl]="textoComentario"
+                    [maxlength]="maxComentario"
                 ></textarea>
+                <small class="text-secondary">{{ textoComentario.value.length }}/{{ maxComentario }}</small>
                 @if (errorEnvio()) {
                     <div class="comentar-error">{{ errorEnvio() }}</div>
                 }

@@ -1,10 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, output, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LIMITE_IMAGEN_PUBLICACION_MB } from '../../../core/constantes';
+import { LIMITE_IMAGEN_PUBLICACION_MB, MAX_MENSAJE_PUBLICACION, MAX_TITULO } from '../../../core/constantes';
 import { mensajeDeError } from '../../../core/errores';
 import { PublicacionesApi } from '../../../core/publicaciones-api';
 import { validarImagen } from '../../../core/validar-imagen';
+
 
 @Component({
     selector: 'app-nueva-publicacion',
@@ -24,9 +25,12 @@ export class NuevaPublicacion {
     // true = el formulario está desplegado; false = solo se ve la barra "Contá tu problema"
     readonly abierto = signal(false);
 
+    protected readonly maxTitulo = MAX_TITULO;
+    protected readonly maxMensaje = MAX_MENSAJE_PUBLICACION;
+
     readonly formulario = this.fb.nonNullable.group({
-        titulo: ['', [Validators.required, Validators.pattern(/\S/)]], //textos con al menos un caracter que no sea espacio
-        mensaje: ['', [Validators.required, Validators.pattern(/\S/)]],
+        titulo: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(MAX_TITULO)]],
+        mensaje: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(MAX_MENSAJE_PUBLICACION)]],
     });
 
     private archivo: File | null = null;

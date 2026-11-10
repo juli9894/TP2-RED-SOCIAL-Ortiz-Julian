@@ -38,7 +38,9 @@
                 aria-label="Editar comentario"
                 [formControl]="texto"
                 appAutoFoco
+                [maxlength]="maxComentario"
             ></textarea>
+            <small class="text-secondary">{{ texto.value.length }}/{{ maxComentario }}</small>
             @if (error()) {
                 <div class="comentario-error">{{ error() }}</div>
             }
@@ -56,7 +58,7 @@
                 </button>
             </div>
         } @else {
-            <p class="comentario-mensaje">{{ comentario().mensaje }}</p>
+            <app-texto-expandible class="comentario-mensaje" [texto]="comentario().mensaje" [limite]="200" [lineas]="4" />
         }
     </div>
 </article>

@@ -1,0 +1,18 @@
+:host {
+    display: block; /* los componentes son "inline" por defecto: así ocupa su propia línea */
+}
+
+.texto-ver-mas {
+    display: block;
+    margin-top: 0.25rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--rs-accion, #f97316);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.texto-ver-mas:hover {
+    text-decoration: underline;
+}

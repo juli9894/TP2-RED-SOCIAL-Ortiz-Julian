@@ -6,12 +6,13 @@ import type { Publicacion } from '../../core/models/publicacion.model';
 import { PluralizarPipe } from '../pipes/pluralizar.pipe';
 import { TiempoRelativoPipe } from '../pipes/tiempo-relativo.pipe';
 import { ImagenRespaldoDirective } from '../directivas/imagen-respaldo.directive';
+import { TextoExpandible } from '../texto-expandible/texto-expandible';
 
 const ZOOM_MAXIMO = 4;
 
 @Component({
     selector: 'app-tarjeta-publicacion',            
-    imports: [DatePipe, RouterLink, PluralizarPipe, TiempoRelativoPipe, ImagenRespaldoDirective],
+    imports: [DatePipe, RouterLink, PluralizarPipe, TiempoRelativoPipe, ImagenRespaldoDirective, TextoExpandible],
     templateUrl: './tarjeta-publicacion.html',
     styleUrl: './tarjeta-publicacion.css',
 })

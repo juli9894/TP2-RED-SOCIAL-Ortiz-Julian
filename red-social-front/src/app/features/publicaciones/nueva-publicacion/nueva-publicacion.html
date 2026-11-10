@@ -21,7 +21,8 @@
             <form class="nueva-formulario" [formGroup]="formulario" (ngSubmit)="enviar()">
                 <div class="mb-3">
                     <label class="form-label" for="titulo">Título</label>
-                    <input id="titulo" class="form-control" type="text" formControlName="titulo" />
+                    <input id="titulo" class="form-control" type="text" formControlName="titulo" [maxlength]="maxTitulo" />
+                    <small class="text-secondary">{{ formulario.controls.titulo.value.length }}/{{ maxTitulo }}</small>
                     @if (formulario.controls.titulo.touched && formulario.controls.titulo.invalid) {
                         <div class="text-danger small">El título es obligatorio</div>
                     }
@@ -29,7 +30,8 @@
 
                 <div class="mb-3">
                     <label class="form-label" for="mensaje">Mensaje</label>
-                    <textarea id="mensaje" class="form-control" rows="3" formControlName="mensaje"></textarea>
+                    <textarea id="mensaje" class="form-control" rows="3" formControlName="mensaje" [maxlength]="maxMensaje"></textarea>
+                    <small class="text-secondary">{{ formulario.controls.mensaje.value.length }}/{{ maxMensaje }}</small>
                     @if (formulario.controls.mensaje.touched && formulario.controls.mensaje.invalid) {
                         <div class="text-danger small">El mensaje es obligatorio</div>
                     }

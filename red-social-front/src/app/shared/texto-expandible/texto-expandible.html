@@ -1,0 +1,6 @@
+<span>{{ textoVisible() }}</span>
+@if (esLargo()) {
+    <button type="button" class="texto-ver-mas" (click)="alternar()">
+        {{ expandido() ? 'Ver menos' : 'Ver más' }}
+    </button>
+}
