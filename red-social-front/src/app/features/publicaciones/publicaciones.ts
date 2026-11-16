@@ -1,13 +1,15 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { PUBLICACIONES_POR_PAGINA } from '../../core/constantes';
+import { delay } from 'rxjs';
+import { PUBLICACIONES_POR_PAGINA, RETRASO_SCROLL_MS } from '../../core/constantes';
 import { PublicacionesApi } from '../../core/publicaciones-api';
 import type { Publicacion } from '../../core/models/publicacion.model';
 import { TarjetaPublicacion } from '../../shared/tarjeta-publicacion/tarjeta-publicacion';
 import { NuevaPublicacion } from './nueva-publicacion/nueva-publicacion';
 import { ModalConfirmacion } from '../../shared/modal-confirmacion/modal-confirmacion';
+import { ScrollInfinitoDirective } from '../../shared/directivas/scroll-infinito.directive';
 
 @Component({
-    imports: [TarjetaPublicacion, NuevaPublicacion, ModalConfirmacion],
+    imports: [TarjetaPublicacion, NuevaPublicacion, ModalConfirmacion, ScrollInfinitoDirective],
     selector: 'app-publicaciones',
     styleUrl: './publicaciones.css',
     templateUrl: './publicaciones.html',
@@ -22,10 +24,10 @@ export class Publicaciones implements OnInit {
     readonly error = signal('');
     readonly aviso = signal('');
     readonly idPorEliminar = signal<string | null>(null); 
-    // ORDEN elegido, PÁGINA actual (empieza en 0) y si existe una página siguiente
+    // ORDEN elegido, si quedan más publicaciones por traer y si se están trayendo ahora (scroll infinito)
     readonly orden = signal<'fecha' | 'meGusta'>('fecha');
-    readonly pagina = signal(0);
     readonly hayMas = signal(false);
+    readonly cargandoMas = signal(false);
 
     ngOnInit() {
         this.cargar();
@@ -33,7 +35,7 @@ export class Publicaciones implements OnInit {
 
     // ─── CICLO LISTAR ───────────────────────────────────────────────
 
-    // [CICLO LISTAR · paso 1/7] Pide al back la página actual
+    // [CICLO LISTAR · paso 1/7] 
     cargar() {
         this.cargando.set(true);
         this.error.set('');
@@ -41,15 +43,16 @@ export class Publicaciones implements OnInit {
         this.api
             .listar({
                 orden: this.orden(),
-                offset: this.pagina() * this.porPagina, //cuantas saltar
-                limit: this.porPagina + 1,//Para saber si hay una mas
+                offset: 0, // desde el principio
+                limit: this.porPagina,
             })
             .subscribe({
                 // [paso 6/7] Llegó la lista
                 next: (lista) => {
-                    this.hayMas.set(lista.length > this.porPagina);
-                    // [paso 7/7] Mostramos solo las primeras porPagina (publicaciones.html las dibuja)
-                    this.publicaciones.set(lista.slice(0, this.porPagina));
+                    // Si vino completa (6 de 6) puede haber más; si vino con menos, ya no queda nada
+                    this.hayMas.set(lista.length === this.porPagina);
+                    // [paso 7/7] La guardamos (publicaciones.html las dibuja)
+                    this.publicaciones.set(lista);
                     this.cargando.set(false);
                 },
                 error: () => {
@@ -59,15 +62,35 @@ export class Publicaciones implements OnInit {
             });
     }
 
-    // Lo llaman los botones de orden. Al cambiar el orden se vuelve a la página 0
-    cambiarOrden(orden: 'fecha' | 'meGusta') {
-        this.orden.set(orden);
-        this.irAPagina(0);
+    // SCROLL INFINITO: lo llama la directiva cuando el usuario llega al final de la lista.
+    // Trae las 6 que siguen: offset = cuántas ya tengo en pantalla. Las agrega al final.
+    cargarMas() {
+        if (this.cargando() || this.cargandoMas() || !this.hayMas()) return;
+
+        this.cargandoMas.set(true);
+        this.api
+            .listar({
+                orden: this.orden(),
+                offset: this.publicaciones().length,
+                limit: this.porPagina,
+            })
+            .pipe(delay(RETRASO_SCROLL_MS)) // pausa corta para que se vea el circulito
+            .subscribe({
+                next: (lista) => {
+                    this.publicaciones.update((actuales) => [...actuales, ...lista]);
+                    this.hayMas.set(lista.length === this.porPagina);
+                    this.cargandoMas.set(false);
+                },
+                error: () => {
+                    this.aviso.set('No pudimos cargar más publicaciones');
+                    this.cargandoMas.set(false);
+                },
+            });
     }
 
-    // [CICLO PUBLICAR · paso 7/7]
-    irAPagina(pagina: number) {
-        this.pagina.set(pagina);
+    // Lo llaman los botones de orden. Al cambiar el orden se vuelve a empezar desde el principio
+    cambiarOrden(orden: 'fecha' | 'meGusta') {
+        this.orden.set(orden);
         this.cargar();
     }
 
@@ -126,7 +149,8 @@ export class Publicaciones implements OnInit {
 
         this.api.eliminar(id).subscribe({
             // [paso 8/8]
-            next: () => this.cargar(),
+            // la saco de la lista en pantalla (sin recargar todo, así no se pierde el scroll)
+            next: () => this.publicaciones.update((lista) => lista.filter((p) => p._id !== id)),
 
             error: () => this.aviso.set('No pudimos eliminar la publicación'),
         });

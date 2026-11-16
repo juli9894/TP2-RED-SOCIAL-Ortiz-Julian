@@ -8,15 +8,12 @@ import { ConfigService } from '@nestjs/config';
 import jwt from 'jsonwebtoken';
 import type { PayloadToken, PedidoAutenticado } from './interfaces/payload-token.interface.js';
 
-// [CICLO SESIÓN] Se aplica con @UseGuards(AuthGuard) en las rutas protegidas.
-// Lee la cabecera "Authorization: Bearer <token>", verifica el token y,
-// si es válido, deja los datos del usuario en pedido.usuario. Si no, responde 401.
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(private configService: ConfigService) {}
 
     canActivate(context: ExecutionContext): boolean {
-        const pedido = context.switchToHttp().getRequest<PedidoAutenticado>();//obtiene req de HTTP
+        const pedido = context.switchToHttp().getRequest<PedidoAutenticado>();//obtiene req de express tipo HTTP
 
         const cabecera = pedido.headers['authorization'];
         const [tipo, token] = cabecera?.split(' ') ?? [];
@@ -26,14 +23,14 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
-            const payload = jwt.verify( //lanza error si el token es inválido o expiró, cae en el catch
+            const payload = jwt.verify( 
                 token,
                 this.configService.getOrThrow<string>('JWT_SECRET'),
-            );
+            );//corta en encabezado, cuerpo, firma. Recalcula firma contra la que trae el token y lee exp
             if (typeof payload === 'string') {
                 throw new Error('Token inválido');
             }
-            pedido.usuario = payload as PayloadToken;//forma de objeto o string, por eso se hace el cast
+            pedido.usuario = payload as PayloadToken;
         } catch {
             throw new UnauthorizedException('Token inválido');
         }

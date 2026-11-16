@@ -12,7 +12,7 @@ export interface UsuarioSesion {
     usuario: string;
     correo: string;
     perfil: string;
-    fechaNacimiento: string; // llega como texto ISO: "1995-03-20T00:00:00.000Z"
+    fechaNacimiento: string; 
     descripcion: string;
     imagenPerfil?: string;
 }

@@ -12,7 +12,7 @@
         <img class="portada-personaje" src="personaje.png" alt="" />
     </header>
 
-    <app-nueva-publicacion (publicada)="irAPagina(0)" />
+    <app-nueva-publicacion (publicada)="cargar()" />
 
     <div class="barra-orden">
         <h2 class="barra-titulo">Problemas publicados</h2>
@@ -64,26 +64,14 @@
         </div>
     }
 
-    @if (!cargando() && (pagina() > 0 || hayMas())) {
-        <nav class="paginacion" aria-label="Paginación">
-            <button
-                type="button"
-                class="btn btn-secundario btn-sm"
-                [disabled]="pagina() === 0"
-                (click)="irAPagina(pagina() - 1)"
-            >
-                Anterior
-            </button>
-            <span>Página {{ pagina() + 1 }}</span>
-            <button
-                type="button"
-                class="btn btn-secundario btn-sm"
-                [disabled]="!hayMas()"
-                (click)="irAPagina(pagina() + 1)"
-            >
-                Siguiente
-            </button>
-        </nav>
+    @if (hayMas() && !cargando() && !cargandoMas()) {
+        <div appScrollInfinito (llegoAlFinal)="cargarMas()" class="centinela"></div>
+    }
+    @if (cargandoMas()) {
+        <div class="cargando-mas" role="status">
+            <div class="spinner-border text-warning" aria-hidden="true"></div>
+            <span>Cargando más publicaciones…</span>
+        </div>
     }
 
     @if (idPorEliminar()) {

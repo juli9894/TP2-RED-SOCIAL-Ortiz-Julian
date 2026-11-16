@@ -7,9 +7,10 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import bcrypt from 'bcryptjs';
 import { isValidObjectId } from 'mongoose';
-import type { Model } from 'mongoose';
+import type { Model, UpdateQuery } from 'mongoose';
 import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
 import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
+import { ActualizarPerfilDto } from './dto/actualizar-perfil.dto.js';
 import { CrearUsuarioAdminDto } from './dto/crear-usuario-admin.dto.js';
 import { CrearUsuarioDto } from './dto/crear-usuario.dto.js';
 import { Usuario } from './schemas/usuario.schema.js';
@@ -39,7 +40,6 @@ export class UsuariosService {
 
         const contrasenaHasheada = await bcrypt.hash(datos.contrasena, 10);
 
-        // registro() de auth.service.ts
         return this.usuarioModel.create({
             ...datos,
             contrasena: contrasenaHasheada,
@@ -91,5 +91,46 @@ export class UsuariosService {
             throw new NotFoundException('Usuario no encontrado');
         }
         return usuario;
+    }
+
+    // ─── [CICLO EDITAR PERFIL] ──────────────────────────────────────
+
+    async actualizarPerfil(id: string, datos: ActualizarPerfilDto, imagenNueva?: string) {
+        const correo = datos.correo.trim().toLowerCase();
+        const usuario = datos.usuario.trim().toLowerCase();
+
+        const correoEnUso = await this.usuarioModel.findOne({ correo, _id: { $ne: id } });
+        if (correoEnUso) {
+            throw new ConflictException('El correo ya está registrado');
+        }
+        const usuarioEnUso = await this.usuarioModel.findOne({ usuario, _id: { $ne: id } });
+        if (usuarioEnUso) {
+            throw new ConflictException('El nombre de usuario ya está en uso');
+        }
+
+        const cambios: UpdateQuery<Usuario> = {
+            $set: {
+                nombre: datos.nombre,
+                apellido: datos.apellido,
+                correo,
+                usuario,
+                fechaNacimiento: new Date(datos.fechaNacimiento),
+                descripcion: datos.descripcion,
+            },
+        };
+        if (imagenNueva) {
+            cambios.$set!.imagenPerfil = imagenNueva; // foto nueva: reemplaza a la anterior
+        } else if (datos.quitarImagen === 'true') {
+            cambios.$unset = { imagenPerfil: '' }; // quitar la foto: se borra el campo
+        } // si no pasa ninguna de las dos, la foto queda como estaba
+
+        const actualizado = await this.usuarioModel
+            .findByIdAndUpdate(id, cambios, { new: true }) // new: true = devolver el usuario ya modificado
+            .select('-contrasena');
+
+        if (!actualizado) {
+            throw new NotFoundException('Usuario no encontrado');
+        }
+        return actualizado;
     }
 }

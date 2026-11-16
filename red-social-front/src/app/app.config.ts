@@ -9,11 +9,9 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
-        // tokenInterceptor se ejecuta antes de cada petición HTTP: agrega el token
-        // a la cabecera Authorization si hay token y la URL es del back
         provideHttpClient(withInterceptors([tokenInterceptor])), provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
+            registrationStrategy: 'registerWhenStable:30000'//pasan 30 seg para no frenar la carga inicial
           }),
     ],
 };

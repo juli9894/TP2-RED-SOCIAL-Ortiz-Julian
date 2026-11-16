@@ -1,6 +1,6 @@
-/* Mismo ancho total que /publicaciones: feed (52rem) + espacio (1.5rem) + panel (22rem) */
+/* Mismo ancho total que /publicaciones: feed (60rem) + espacio (1.5rem) + panel (24rem) */
 .perfil-pagina {
-    max-width: calc(52rem + 1.5rem + 22rem);
+    max-width: calc(60rem + 1.5rem + 24rem);
     margin: 0 auto;
 }
 
@@ -92,7 +92,7 @@
 
 .perfil-cuerpo {
     display: grid;
-    grid-template-columns: minmax(0, 52rem) 22rem;
+    grid-template-columns: minmax(0, 60rem) 24rem;
     gap: 1.5rem;
     align-items: start;
 }
@@ -178,10 +178,32 @@
     overflow-wrap: anywhere;
 }
 
+/* Pantallas anchas: mismo reparto simétrico que en /publicaciones (3 espacios iguales) */
+@media (min-width: 1400px) {
+    .perfil-pagina {
+        max-width: none;
+        margin: 0 -1.5rem;
+    }
+
+    .perfil-cuerpo {
+        grid-template-columns:
+            minmax(1.5rem, 1fr) minmax(0, 60rem) minmax(1.5rem, 1fr) 24rem minmax(1.5rem, 1fr);
+        gap: 0;
+    }
+
+    .perfil-principal {
+        grid-column: 2;
+    }
+
+    .perfil-lateral {
+        grid-column: 4;
+    }
+}
+
 /* ---------- Pantallas angostas: una columna, con el panel arriba ---------- */
 @media (max-width: 1399.98px) {
     .perfil-cuerpo {
-        grid-template-columns: minmax(0, 52rem);
+        grid-template-columns: minmax(0, 60rem);
         justify-content: center;
     }
 
@@ -194,5 +216,72 @@
     .perfil-identidad {
         flex-direction: column;
         text-align: center;
+    }
+}
+
+/* ---------- Edición del perfil ---------- */
+.perfil-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+}
+
+.perfil-edicion {
+    margin-bottom: 1.5rem;
+    background-color: var(--rs-superficie);
+    border-color: var(--rs-borde);
+}
+
+.edicion-foto {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.edicion-foto-img {
+    width: 6rem;
+    height: 6rem;
+    border: 3px solid var(--rs-accion);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edicion-foto-icono {
+    font-size: 6rem;
+    line-height: 1;
+    color: var(--rs-texto-suave);
+}
+
+.edicion-foto-botones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edicion-foto-botones small {
+    flex-basis: 100%;
+}
+
+.edicion-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+@media (max-width: 575.98px) {
+    .perfil-acciones {
+        align-items: center;
+    }
+
+    .edicion-foto {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .edicion-foto-botones {
+        justify-content: center;
     }
 }

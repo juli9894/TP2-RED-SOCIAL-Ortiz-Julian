@@ -153,10 +153,10 @@
                     </label>
                     <input
                         id="imagenPerfil"
-                        type="file" //navegador muestra un selector de archivos
-                        accept="image/*" //solo permite seleccionar imágenes
+                        type="file" //selector de archivos
+                        accept="image/*" //solo imagenes
                         class="form-control"
-                        (change)="seleccionarArchivo($event)" //cuando cambia ejecuta la función seleccionarArchivo que envia el evento
+                        (change)="seleccionarArchivo($event)"
                         [class.is-invalid]="errorArchivo()"
                     />
                     @if (errorArchivo()) {

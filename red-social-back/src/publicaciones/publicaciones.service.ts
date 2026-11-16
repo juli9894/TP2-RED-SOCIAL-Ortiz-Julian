@@ -34,7 +34,6 @@ export class PublicacionesService {
         let imagen: string | undefined;
 
         if (archivo) {
-            // Sube la imagen a Cloudinary (valida que sea imagen) y devuelve la URL
             imagen = await this.cloudinaryService.subirImagenPublicacion(archivo);
         }
 

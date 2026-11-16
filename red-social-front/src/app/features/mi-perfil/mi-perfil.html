@@ -23,12 +23,135 @@
                             <p class="perfil-usuario">&#64;{{ yo.usuario }}</p>
                         </div>
 
-                        <span class="perfil-rol">
-                            <i class="bi bi-person-workspace" aria-hidden="true"></i>
-                            <span class="text-capitalize">{{ yo.perfil }}</span>
-                        </span>
+                        <div class="perfil-acciones">
+                            <span class="perfil-rol">
+                                <i class="bi bi-person-workspace" aria-hidden="true"></i>
+                                <span class="text-capitalize">{{ yo.perfil }}</span>
+                            </span>
+                            @if (!editando()) {
+                                <button type="button" class="btn btn-secundario btn-sm" (click)="abrirEdicion()">
+                                    <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                                    Editar perfil
+                                </button>
+                            }
+                        </div>
                     </div>
                 </header>
+
+                <!-- [CICLO EDITAR PERFIL] Formulario con mis datos actuales; solo se ve al tocar "Editar perfil" -->
+                @if (editando()) {
+                    <form class="perfil-edicion card" [formGroup]="formulario" (ngSubmit)="guardar()" novalidate>
+                        <div class="card-body p-4">
+                            <h2 class="perfil-subtitulo">Editar perfil</h2>
+
+                            <!-- Foto: ver, cambiar o quitar -->
+                            <div class="edicion-foto">
+                                @if (fotoMostrada(); as foto) {
+                                    <img class="edicion-foto-img" [src]="foto" alt="Tu foto de perfil" />
+                                } @else {
+                                    <i class="bi bi-person-circle edicion-foto-icono" aria-hidden="true"></i>
+                                }
+                                <div class="edicion-foto-botones">
+                                    <input
+                                        #entradaFoto
+                                        id="foto-perfil"
+                                        type="file"
+                                        class="visually-hidden"
+                                        accept="image/*"
+                                        (change)="seleccionarArchivo($event)"
+                                    />
+                                    <label for="foto-perfil" class="btn btn-secundario btn-sm">
+                                        <i class="bi bi-camera" aria-hidden="true"></i>
+                                        {{ fotoMostrada() ? 'Cambiar foto' : 'Agregar foto' }}
+                                    </label>
+                                    @if (fotoMostrada()) {
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-danger btn-sm"
+                                            (click)="pedirQuitarFoto(entradaFoto)"
+                                        >
+                                            <i class="bi bi-trash" aria-hidden="true"></i>
+                                            Quitar foto
+                                        </button>
+                                    }
+                                    <small class="text-secondary">Imagen de hasta {{ limiteFotoMb }} MB.</small>
+                                    @if (errorArchivo()) {
+                                        <small class="text-danger">{{ errorArchivo() }}</small>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="edit-nombre">Nombre</label>
+                                    <input id="edit-nombre" type="text" class="form-control" formControlName="nombre"
+                                        [class.is-invalid]="invalido('nombre')" />
+                                    @if (invalido('nombre')) {
+                                        <div class="invalid-feedback">Ingresá tu nombre.</div>
+                                    }
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="edit-apellido">Apellido</label>
+                                    <input id="edit-apellido" type="text" class="form-control" formControlName="apellido"
+                                        [class.is-invalid]="invalido('apellido')" />
+                                    @if (invalido('apellido')) {
+                                        <div class="invalid-feedback">Ingresá tu apellido.</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="edit-usuario">Nombre de usuario</label>
+                                    <input id="edit-usuario" type="text" class="form-control" formControlName="usuario"
+                                        autocomplete="username" [class.is-invalid]="invalido('usuario')" />
+                                    @if (invalido('usuario')) {
+                                        <div class="invalid-feedback">Elegí un nombre de usuario.</div>
+                                    }
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="edit-correo">Correo</label>
+                                    <input id="edit-correo" type="email" class="form-control" formControlName="correo"
+                                        autocomplete="email" [class.is-invalid]="invalido('correo')" />
+                                    @if (invalido('correo')) {
+                                        <div class="invalid-feedback">Ingresá un correo válido.</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="edit-fecha">Fecha de nacimiento</label>
+                                <input id="edit-fecha" type="date" class="form-control" formControlName="fechaNacimiento"
+                                    [class.is-invalid]="invalido('fechaNacimiento')" />
+                                @if (invalido('fechaNacimiento')) {
+                                    <div class="invalid-feedback">Ingresá tu fecha de nacimiento.</div>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="edit-descripcion">Descripción breve</label>
+                                <textarea id="edit-descripcion" rows="3" class="form-control" formControlName="descripcion"
+                                    [class.is-invalid]="invalido('descripcion')"></textarea>
+                                @if (invalido('descripcion')) {
+                                    <div class="invalid-feedback">Contanos algo breve sobre vos.</div>
+                                }
+                            </div>
+
+                            @if (errorEdicion()) {
+                                <div class="alert alert-danger" role="alert">{{ errorEdicion() }}</div>
+                            }
+
+                            <div class="edicion-botones">
+                                <button type="button" class="btn btn-secundario" [disabled]="guardando()" (click)="cancelarEdicion()">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-accion" [disabled]="guardando()">
+                                    {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                }
 
                 <!-- Izquierda: mis publicaciones (arrancan 3 y se pueden traer más) -->
                 <div class="perfil-publicaciones">
@@ -50,15 +173,15 @@
                             }
                         </div>
 
-                        @if (hayMas()) {
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary"
-                                [disabled]="cargandoMas()"
-                                (click)="verMas()"
-                            >
-                                {{ cargandoMas() ? 'Cargando...' : 'Ver más publicaciones' }}
-                            </button>
+                        <!-- Scroll infinito: al llegar acá se traen 6 más (se saca mientras carga para que vuelva a avisar) -->
+                        @if (hayMas() && !cargandoMas()) {
+                            <div appScrollInfinito (llegoAlFinal)="cargarMas()" class="centinela"></div>
+                        }
+                        @if (cargandoMas()) {
+                            <div class="cargando-mas" role="status">
+                                <div class="spinner-border text-warning" aria-hidden="true"></div>
+                                <span>Cargando más publicaciones…</span>
+                            </div>
                         }
                     }
                 </div>

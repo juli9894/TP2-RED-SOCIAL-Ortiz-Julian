@@ -13,7 +13,7 @@ export class CloudinaryService {
         });
     }
 
-    // [CICLO REGISTRO · paso 4/6] Foto de perfil: cuadrada de 400x400
+    // [CICLO REGISTRO · paso 4/6] 
     subirImagen(archivo: ArchivoSubido): Promise<string> {
         return this.subir(archivo, {
             folder: 'teresuelvo/perfiles',
@@ -21,7 +21,7 @@ export class CloudinaryService {
         });
     }
 
-    // [CICLO PUBLICAR · paso 5/7] Imagen de publicación: se respeta la proporción, con un ancho máximo de 1200
+    // [CICLO PUBLICAR · paso 5/7] 
     subirImagenPublicacion(archivo: ArchivoSubido): Promise<string> {
         return this.subir(archivo, {
             folder: 'teresuelvo/publicaciones',
@@ -36,7 +36,6 @@ export class CloudinaryService {
         }
     }
 
-    // Sube el archivo a Cloudinary y devuelve la URL pública (https) de la imagen
     private subir(archivo: ArchivoSubido, opciones: UploadApiOptions): Promise<string> {
         this.validarImagen(archivo);
 
@@ -47,7 +46,7 @@ export class CloudinaryService {
                 }
                 resolve(resultado.secure_url);//retorna la URL pública de la imagen
             });
-            flujo.end(archivo.buffer);//sube la imagen desde el buffer del archivo
+            flujo.end(archivo.buffer);//sube desde el buffer
         });
     }
 }

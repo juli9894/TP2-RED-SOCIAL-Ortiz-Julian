@@ -24,7 +24,6 @@ export class Login {
         contrasena: ['', [Validators.required]],
     });
 
-    // Para mostrar el campo en rojo solo si está mal y el usuario ya lo tocó
     protected invalido(campo: 'usuarioOCorreo' | 'contrasena') {
         const control = this.formulario.controls[campo];
         return control.invalid && control.touched;

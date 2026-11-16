@@ -12,6 +12,6 @@ import { UsuariosService } from './usuarios.service.js';
     ],
     providers: [UsuariosService],
     controllers: [UsuariosController],
-    exports: [UsuariosService], // lo usa AuthModule
+    exports: [UsuariosService], 
 })
 export class UsuariosModule {}

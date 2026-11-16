@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { CloudinaryService } from '../cloudinary/cloudinary.service.js';
 import type { ArchivoSubido } from '../cloudinary/interfaces/archivo-subido.interface.js';
+import { ActualizarPerfilDto } from '../usuarios/dto/actualizar-perfil.dto.js';
 import { CrearUsuarioDto } from '../usuarios/dto/crear-usuario.dto.js';
 import { LoginDto } from '../usuarios/dto/login.dto.js';
 import { UsuariosService } from '../usuarios/usuarios.service.js';
@@ -30,7 +31,7 @@ export class AuthService {
 
         const { contrasena, ...sinContrasena } = usuario.toObject();
 
-        return { token: this.crearToken(sinContrasena), usuario: sinContrasena };    
+        return { token: this.crearToken(sinContrasena), usuario: sinContrasena };//auth.controller
     }
 
     // [CICLO LOGIN · paso 4/6]
@@ -55,7 +56,6 @@ export class AuthService {
 
         const { contrasena, ...sinContrasena } = usuario.toObject();
 
-        // El token lleva id, usuario y perfil, con firma jwt
         const token = this.crearToken(sinContrasena);
         
         return { token, usuario: sinContrasena }; // auth.ts login() front
@@ -69,7 +69,7 @@ export class AuthService {
         );
     }
 
-    // [CICLO SESIÓN] Devuelve un token nuevo con los mismos datos del token que llegó
+    // [CICLO SESIÓN] Token nuevo
     refrescar(payload: PayloadToken) {
         const token = this.crearToken({
             _id: payload.id,
@@ -77,5 +77,18 @@ export class AuthService {
             perfil: payload.perfil,
         });
         return { token };
+    }
+
+    // [CICLO EDITAR PERFIL]
+    async actualizarPerfil(id: string, datos: ActualizarPerfilDto, archivo?: ArchivoSubido) {
+        let imagenNueva: string | undefined;
+        if (archivo) {
+            imagenNueva = await this.cloudinaryService.subirImagen(archivo);
+        }
+
+        const usuario = await this.usuariosService.actualizarPerfil(id, datos, imagenNueva);
+        const sinContrasena = usuario.toObject();
+
+        return { token: this.crearToken(sinContrasena), usuario: sinContrasena };
     }
 }

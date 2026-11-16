@@ -45,3 +45,19 @@
     align-self: flex-start;
     color: #ff8a80;
 }
+/* Contador y botón "Comentar" en una sola fila */
+.comentar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+}
+.comentar textarea,
+.comentar .form-control {
+    flex: 1 1 100%;
+}
+
+/* El detalle se lee mejor en una columna más angosta que los dashboards */
+.pagina {
+    max-width: 60rem;
+}

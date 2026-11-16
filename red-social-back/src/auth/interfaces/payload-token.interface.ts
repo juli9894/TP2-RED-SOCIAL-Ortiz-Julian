@@ -1,4 +1,3 @@
-// Datos que van adentro del token JWT (los firma auth.service.ts en el login)
 export interface PayloadToken {
     id: string;
     usuario: string;

@@ -14,7 +14,6 @@ import { AvisoSesion } from './shared/aviso-sesion/aviso-sesion';
 export class App {
     private router = inject(Router);
 
-    // true cuando estamos en login, registro o cargando (pantallas sin barra ni menú)
     protected esAcceso = signal(false);
 
     constructor() {

@@ -9,14 +9,13 @@ const COLORES_TORTA = ['#f97316', '#facc15', '#38bdf8', '#a78bfa', '#34d399', '#
 Chart.defaults.color = '#b9b8b2';
 Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
 
-// [CICLO ESTADÍSTICAS · gráfico] Componente reutilizable: dibuja barras, líneas o torta
+// [CICLO ESTADÍSTICAS]
 @Component({
     selector: 'app-grafico',
     templateUrl: './grafico.html',
     styleUrl: './grafico.css',
 })
 export class Grafico {
-    // Lo que el componente padre le pasa
     tipo = input.required<'bar' | 'line' | 'pie'>();
     nombre = input('Cantidad'); // el nombre de la serie (sale al pasar el mouse)
     etiquetas = input.required<string[]>();

@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, inject, Renderer2 } from '@angular/core';
 
-// Silueta gris de usuario, dibujada como imagen incrustada (no hace falta ningún archivo)
+// Silueta gris de usuario, dibujada como imagen incrustada
 const IMAGEN_RESPALDO =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(
@@ -11,17 +11,14 @@ const IMAGEN_RESPALDO =
             '</svg>',
     );
 
-// Si la foto no se puede cargar (link roto, imagen borrada), muestra una silueta.
-// Uso: <img [src]="foto" appImagenRespaldo />
 @Directive({ selector: 'img[appImagenRespaldo]' })
 export class ImagenRespaldoDirective {
     private elemento = inject<ElementRef<HTMLImageElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
-    // El navegador avisa con el evento "error" cuando una imagen no carga
     @HostListener('error')
     alFallar() {
-        // Si la silueta también fallara, no insisto (evita un bucle infinito)
+
         if (this.elemento.nativeElement.getAttribute('src') === IMAGEN_RESPALDO) return;
         this.renderer.setAttribute(this.elemento.nativeElement, 'src', IMAGEN_RESPALDO);
     }

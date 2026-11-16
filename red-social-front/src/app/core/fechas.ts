@@ -1,4 +1,3 @@
-// Convierte una fecha a "AAAA-MM-DD" (el formato del <input type="date"> y del back)
 function aTexto(fecha: Date) {
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const dia = String(fecha.getDate()).padStart(2, '0');

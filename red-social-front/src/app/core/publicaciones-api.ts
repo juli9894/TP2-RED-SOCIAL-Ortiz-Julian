@@ -7,8 +7,6 @@ import type {
     RespuestaMeGusta,
 } from './models/publicacion.model';
 
-// Peticiones al back relacionadas con publicaciones (listar, dar/quitar me gusta, crear, eliminar).
-// El token lo agrega solo token.interceptor.ts.
 @Injectable({ providedIn: 'root' })
 export class PublicacionesApi {
     private http = inject(HttpClient);
@@ -16,7 +14,7 @@ export class PublicacionesApi {
     // [CICLO LISTAR · paso 2/7] 
     listar(filtros: FiltrosPublicaciones = {}) {
 
-        let params = new HttpParams();//codifica los filtros en la URL: ?orden=fecha&usuario=123&offset=0&limit=10
+        let params = new HttpParams();
         for (const [clave, valor] of Object.entries(filtros)) {
             if (valor !== undefined) {
                 params = params.set(clave, String(valor));
@@ -26,12 +24,12 @@ export class PublicacionesApi {
         return this.http.get<Publicacion[]>(`${API_URL}/publicaciones`, { params });
     }
 
-    // [CICLO DETALLE] GET /publicaciones/:id → una sola publicación
+    // [CICLO DETALLE] 
     obtener(id: string) {
         return this.http.get<Publicacion>(`${API_URL}/publicaciones/${id}`);
     }
 
-    // [CICLO ME GUSTA · paso 3/7] POST /publicaciones/:id/me-gusta
+    // [CICLO ME GUSTA]
     darMeGusta(id: string) {
         return this.http.post<RespuestaMeGusta>(
             `${API_URL}/publicaciones/${id}/me-gusta`,
@@ -39,19 +37,19 @@ export class PublicacionesApi {
         );
     }
 
-    // [CICLO ME GUSTA · paso 3/7] DELETE /publicaciones/:id/me-gusta
+    // [CICLO ME GUSTA]
     quitarMeGusta(id: string) {
         return this.http.delete<RespuestaMeGusta>(
             `${API_URL}/publicaciones/${id}/me-gusta`,
         );
     }
 
-    // [CICLO PUBLICAR · paso 2/7] 
+    // [CICLO PUBLICAR]
     crear(datos: FormData) {
         return this.http.post<{ _id: string }>(`${API_URL}/publicaciones`, datos);
     }
 
-    // [CICLO ELIMINAR · paso 4/8] DELETE /publicaciones/:id
+    // [CICLO ELIMINAR]
     eliminar(id: string) {
         return this.http.delete<{ mensaje: string }>(`${API_URL}/publicaciones/${id}`);
     }

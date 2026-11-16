@@ -6,7 +6,6 @@ import { Usuario, UsuarioDocument } from '../usuarios/schemas/usuario.schema.js'
 import { RangoFechasDto } from './dto/rango-fechas.dto.js';
 import { Publicacion, PublicacionDocument } from './schemas/publicacion.schema.js';
 
-// Argentina no cambia la hora en verano, así que el desfase es siempre -03:00
 const DESFASE = '-03:00';
 const ZONA = 'America/Argentina/Buenos_Aires';
 
@@ -32,34 +31,30 @@ export class EstadisticasService {
         return { $gte: inicio, $lte: fin };
     }
 
-    // [CICLO ESTADÍSTICAS · 1] Publicaciones hechas por cada usuario en el lapso
+    // [CICLO ESTADÍSTICAS]
     publicacionesPorUsuario(dto: RangoFechasDto) {
         return this.publicacionModel.aggregate([
-            // 1) solo las publicaciones del lapso que no fueron dadas de baja
             { $match: { eliminada: false, createdAt: this.rango(dto) } },
-            // 2) una fila por autor, sumando 1 por cada publicación
             { $group: { _id: '$autor', cantidad: { $sum: 1 } } },
-            // 3) traigo los datos del autor desde la colección de usuarios
             {
                 $lookup: {
                     from: this.usuarioModel.collection.name,
                     localField: '_id',
-                    foreignField: '_id',
+                    foreignField: '_id',//contra cada id de la coleccion
                     as: 'autor',
                 },
             },
             { $unwind: '$autor' },
-            // 4) me quedo solo con lo que necesita el gráfico
+            // lo que necesita el gráfico
             { $project: { _id: 0, usuario: '$autor.usuario', cantidad: 1 } },
             { $sort: { cantidad: -1 } },
         ]);
     }
 
-    // [CICLO ESTADÍSTICAS · 2] Comentarios hechos por día en el lapso
+    // [CICLO ESTADÍSTICAS]
     comentariosPorDia(dto: RangoFechasDto) {
         return this.comentarioModel.aggregate([
             { $match: { createdAt: this.rango(dto) } },
-            // una fila por día ("2026-11-05"), contando los comentarios de ese día
             {
                 $group: {
                     _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: ZONA } },
@@ -67,11 +62,11 @@ export class EstadisticasService {
                 },
             },
             { $project: { _id: 0, fecha: '$_id', cantidad: 1 } },
-            { $sort: { fecha: 1 } }, // de la fecha más vieja a la más nueva
+            { $sort: { fecha: 1 } }, 
         ]);
     }
 
-    // [CICLO ESTADÍSTICAS · 3] Comentarios recibidos por cada publicación en el lapso (top 10)
+    // [CICLO ESTADÍSTICAS]
     comentariosPorPublicacion(dto: RangoFechasDto) {
         return this.comentarioModel.aggregate([
             { $match: { createdAt: this.rango(dto) } },

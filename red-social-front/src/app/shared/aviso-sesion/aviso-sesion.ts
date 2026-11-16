@@ -17,7 +17,6 @@ export class AvisoSesion {
     protected renovando = signal(false);
     protected error = signal('');
 
-    // Pide un token nuevo; si sale bien, auth.ts apaga el aviso y rearma las alarmas
     protected seguir() {
         this.renovando.set(true);
         this.error.set('');

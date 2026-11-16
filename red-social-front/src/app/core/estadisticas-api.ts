@@ -14,7 +14,7 @@ import type {
 export class EstadisticasApi {
     private http = inject(HttpClient);
 
-    // [CICLO ESTADÍSTICAS · front] GET /estadisticas/publicaciones-por-usuario?desde=…&hasta=…
+    // [CICLO ESTADÍSTICAS]
     publicacionesPorUsuario(rango: RangoFechas) {
         return this.http.get<PublicacionesPorUsuario[]>(
             `${API_URL}/estadisticas/publicaciones-por-usuario`,

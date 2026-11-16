@@ -8,7 +8,7 @@
     --rs-superficie-alta: #393936;
     --rs-borde: #4a4a46;
     --rs-texto: #ecebe6;
-    --rs-texto-suave: #a9a79f;
+    --rs-texto-suave: #b8b6ae;
     --rs-accion: #f97316;
     --rs-accion-clara: #fb923c;
     --rs-accion-oscura: #ea580c;
@@ -208,9 +208,9 @@ a:hover {
 }
 
 /* ---------- Columna central y lista de tarjetas ---------- */
-/* Columna angosta centrada (estilo Reddit): se lee cómoda y no queda vacío a los costados */
+/* Columna centrada (estilo Reddit): se lee cómoda y no queda vacío a los costados */
 .pagina {
-    max-width: 52rem;
+    max-width: 78rem;
     margin: 0 auto;
 }
 
@@ -295,4 +295,72 @@ a:hover {
     flex: 1;
     height: 1px;
     background-color: var(--rs-borde);
+}
+
+/* Radios y checks con el color de acción de la app */
+.form-check-input:checked {
+    background-color: var(--rs-accion, #f97316);
+    border-color: var(--rs-accion, #f97316);
+}
+.form-check-input:focus {
+    border-color: var(--rs-accion, #f97316);
+    box-shadow: 0 0 0 0.2rem rgba(249, 115, 22, 0.25);
+}
+
+/* Celular: formularios de acceso alineados a la izquierda y logo con aire */
+@media (max-width: 767.98px) {
+    .acceso-formulario .card,
+    .acceso-formulario form {
+        text-align: left;
+    }
+    .acceso-logo {
+        margin-bottom: 1rem;
+    }
+    .acceso-lema {
+        color: #e4e2da;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* ---------- Escritorio: más aire y letra más cómoda ---------- */
+@media (min-width: 992px) {
+    body {
+        font-size: 1.05rem;
+    }
+
+    .acceso-formulario .card {
+        max-width: 31rem;
+    }
+    .acceso-formulario .card-body {
+        padding: 2.25rem !important;
+    }
+    .acceso-formulario .form-label {
+        font-size: 1rem;
+    }
+    .acceso-formulario .form-control {
+        padding: 0.8rem 1rem;
+        font-size: 1.05rem;
+    }
+    .acceso-formulario h2 {
+        font-size: 1.9rem;
+    }
+
+    .pagina h1,
+    .contenido h1 {
+        font-size: 2.6rem;
+    }
+}
+
+/* ---------- Scroll infinito ---------- */
+.centinela {
+    height: 1px;
+}
+
+.cargando-mas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.5rem 1rem 2rem;
+    color: var(--rs-texto-suave);
 }

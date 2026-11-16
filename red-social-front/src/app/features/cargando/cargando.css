@@ -7,3 +7,7 @@
     gap: 1rem;
     color: var(--rs-texto-suave, #b9b8b2);
 }
+.cargando-logo {
+    width: 5rem;
+    height: auto;
+}

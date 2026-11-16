@@ -3,6 +3,7 @@
     [class.tarjeta-clicable]="enlaceDetalle()"
     (click)="abrirDetalle($event)"
 >
+    <!-- Estilo Reddit: autor y fecha en una sola línea chica arriba de todo -->
     <header class="tarjeta-autor">
         @if (publicacion().autor.imagenPerfil; as foto) {
             <img
@@ -14,12 +15,11 @@
         } @else {
             <i class="bi bi-person-circle tarjeta-avatar-icono" aria-hidden="true"></i>
         }
-        <div class="tarjeta-autor-datos">
-            <strong>{{ publicacion().autor.usuario }}</strong>
-            <small class="tarjeta-fecha" [title]="publicacion().createdAt | date: 'dd/MM/yyyy HH:mm'">
-                {{ publicacion().createdAt | tiempoRelativo }}
-            </small>
-        </div>
+        <strong class="tarjeta-usuario">{{ publicacion().autor.usuario }}</strong>
+        <span class="tarjeta-punto" aria-hidden="true">•</span>
+        <small class="tarjeta-fecha" [title]="publicacion().createdAt | date: 'dd/MM/yyyy HH:mm'">
+            {{ publicacion().createdAt | tiempoRelativo }}
+        </small>
     </header>
 
     <h2 class="tarjeta-titulo">{{ publicacion().titulo }}</h2>
@@ -38,14 +38,15 @@
         />
     }
 
+    <!-- Pie con "pastillas" (me gusta, comentarios) y el tacho a la derecha -->
     <footer class="tarjeta-pie">
         <button
             type="button"
-            class="btn-corazon"
+            class="pastilla btn-corazon"
             [class.activo]="yaMeGusta()"
             [attr.aria-pressed]="yaMeGusta()"
             [disabled]="soloLectura()"
-            aria-label="Me gusta"
+            [attr.aria-label]="'Me gusta (' + publicacion().cantidadMeGusta + ')'"
             (click)="tocarCorazon()"
         >
             <i
@@ -54,19 +55,25 @@
                 [class.bi-heart-fill]="yaMeGusta()"
                 aria-hidden="true"
             ></i>
+            {{ publicacion().cantidadMeGusta }}
         </button>
-        <span>{{ publicacion().cantidadMeGusta }} me gusta</span>
 
         @if (enlaceDetalle()) {
-            <a class="tarjeta-comentarios" [routerLink]="['/publicaciones', publicacion()._id]">
-                <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                {{ publicacion().cantidadComentarios | pluralizar: 'comentario' : 'comentarios' }}
-            </a>
-        } @else {
-            <span class="tarjeta-comentarios">
+            <a
+                class="pastilla tarjeta-comentarios"
+                [routerLink]="['/publicaciones', publicacion()._id]"
+                [attr.aria-label]="publicacion().cantidadComentarios | pluralizar: 'comentario' : 'comentarios'"
+            >
                 <i class="bi bi-chat-dots" aria-hidden="true"></i>
                 {{ publicacion().cantidadComentarios }}
-                {{ publicacion().cantidadComentarios === 1 ? 'comentario' : 'comentarios' }}
+            </a>
+        } @else {
+            <span
+                class="pastilla tarjeta-comentarios"
+                [attr.aria-label]="publicacion().cantidadComentarios | pluralizar: 'comentario' : 'comentarios'"
+            >
+                <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                {{ publicacion().cantidadComentarios }}
             </span>
         }
 

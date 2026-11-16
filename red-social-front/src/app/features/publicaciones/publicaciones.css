@@ -1,9 +1,28 @@
 /* ---------- Distribución: feed + panel lateral ---------- */
 .pagina-feed {
     display: grid;
-    grid-template-columns: minmax(0, 52rem) 22rem;
+    grid-template-columns: minmax(0, 60rem) 24rem;
     gap: 1.5rem;
     justify-content: center;
+}
+
+/* Pantallas anchas: el espacio libre se reparte en 3 partes iguales (borde del menú ↔ feed ↔ panel ↔ borde derecho).
+   Las columnas "1fr" vacías son esos espacios; el margin negativo cancela el padding de .contenido para que los bordes también cuenten */
+@media (min-width: 1400px) {
+    .pagina-feed {
+        grid-template-columns:
+            minmax(1.5rem, 1fr) minmax(0, 60rem) minmax(1.5rem, 1fr) 24rem minmax(1.5rem, 1fr);
+        gap: 0;
+        margin: 0 -1.5rem;
+    }
+
+    .feed-principal {
+        grid-column: 2;
+    }
+
+    .feed-lateral {
+        grid-column: 4;
+    }
 }
 
 .feed-lateral {
@@ -86,7 +105,7 @@
 /* Pantallas medianas y chicas: sin panel lateral, solo el feed */
 @media (max-width: 1399.98px) {
     .pagina-feed {
-        grid-template-columns: minmax(0, 52rem);
+        grid-template-columns: minmax(0, 60rem);
     }
 
     .feed-lateral {

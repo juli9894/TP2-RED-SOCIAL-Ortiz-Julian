@@ -100,3 +100,22 @@
     border-radius: 50%;
     object-fit: cover;
 }
+/* Celular: los datos ocupan toda la fila y no se cortan; etiquetas y botón van debajo */
+@media (max-width: 575.98px) {
+    .usuario-datos {
+        flex: 1 1 calc(100% - 4rem);
+    }
+    .usuario-datos strong,
+    .usuario-datos small {
+        overflow-wrap: anywhere;
+    }
+}
+
+/* "Perfil" del alta se ve como el resto de las etiquetas, no como título de sección */
+.usuarios-alta legend.form-label,
+fieldset legend.form-label {
+    font-size: 1rem;
+    float: none;
+    width: auto;
+    margin-bottom: 0.5rem;
+}

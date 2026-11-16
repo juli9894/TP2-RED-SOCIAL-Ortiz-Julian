@@ -4,7 +4,7 @@ import { catchError, forkJoin, map, of, timer } from 'rxjs';
 import { Auth } from '../../core/auth';
 import { TIEMPO_MINIMO_CARGANDO_MS } from '../../core/constantes';
 
-// [CICLO SESIÓN] Primera pantalla al abrir la app: valida el token antes de mostrar nada
+// [CICLO SESIÓN] 
 @Component({
     selector: 'app-cargando',
     templateUrl: './cargando.html',
@@ -15,20 +15,17 @@ export class Cargando implements OnInit {
     private router = inject(Router);
 
     ngOnInit() {
-        // Sin token no hay nada que validar: al login
         if (!this.auth.obtenerToken()) {
             this.router.navigate(['/login']);
             return;
         }
 
-        // Respuesta del back convertida en true (token válido) o false (vencido o inválido)
         const validacion$ = this.auth.autorizar().pipe(
             map(() => true),
             catchError(() => of(false)),
-        );
+        );//al final solo true o false
 
-        // forkJoin espera a que terminen las dos: la validación y el tiempo mínimo del spinner
-        forkJoin([validacion$, timer(TIEMPO_MINIMO_CARGANDO_MS)]).subscribe(([valido]) => {
+        forkJoin([validacion$, timer(TIEMPO_MINIMO_CARGANDO_MS)]).subscribe(([valido]) => {//solo primer resultado del array $validacion true/false
             if (valido) {
                 this.router.navigate(['/publicaciones']);
             } else {
